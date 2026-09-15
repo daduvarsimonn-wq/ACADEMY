@@ -1,181 +1,178 @@
-export default async function handler(req, res) {
+const PAYPAL_API = "https://api-m.paypal.com";
 
+const COURSE_SLUG = "agency-blueprint";
+const COURSE_PRICE = "29.00";
+const COURSE_CURRENCY = "USD";
+
+function json(res, status, body) {
+  return res.status(status).json(body);
+}
+
+async function getSupabaseUser(req) {
+  const auth = req.headers.authorization || "";
+
+  if (!auth.startsWith("Bearer ")) {
+    return null;
+  }
+
+  const response = await fetch(
+    `${process.env.SUPABASE_URL}/auth/v1/user`,
+    {
+      method: "GET",
+      headers: {
+        apikey:
+          process.env.SUPABASE_PUBLISHABLE_KEY,
+
+        Authorization: auth
+      }
+    }
+  );
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return response.json();
+}
+
+async function getPayPalAccessToken() {
+  const credentials = Buffer.from(
+    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+  ).toString("base64");
+
+  const response = await fetch(
+    `${PAYPAL_API}/v1/oauth2/token`,
+    {
+      method: "POST",
+
+      headers: {
+        Authorization:
+          `Basic ${credentials}`,
+
+        "Content-Type":
+          "application/x-www-form-urlencoded"
+      },
+
+      body:
+        "grant_type=client_credentials"
+    }
+  );
+
+  const data =
+    await response.json();
+
+  if (
+    !response.ok ||
+    !data.access_token
+  ) {
+    console.error(
+      "PayPal OAuth error:",
+      data
+    );
+
+    throw new Error(
+      "PayPal authentication failed."
+    );
+  }
+
+  return data.access_token;
+}
+
+async function paypalRequest(
+  url,
+  options
+) {
+  const response =
+    await fetch(url, options);
+
+  const data =
+    await response
+      .json()
+      .catch(() => ({}));
+
+  return {
+    response,
+    data
+  };
+}
+
+export default async function handler(
+  req,
+  res
+) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
+    return json(res, 405, {
+      error:
+        "Method not allowed."
     });
   }
 
-
   try {
 
-    /* ==========================================
-       ENVIRONMENT VARIABLES
-    ========================================== */
+    const required = [
+      "SUPABASE_URL",
+      "SUPABASE_PUBLISHABLE_KEY",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "PAYPAL_CLIENT_ID",
+      "PAYPAL_CLIENT_SECRET"
+    ];
 
-    const {
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY,
-      SUPABASE_SERVICE_ROLE_KEY,
-      PAYPAL_CLIENT_ID,
-      PAYPAL_CLIENT_SECRET
-    } = process.env;
+    for (const name of required) {
 
+      if (!process.env[name]) {
 
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_PUBLISHABLE_KEY ||
-      !SUPABASE_SERVICE_ROLE_KEY ||
-      !PAYPAL_CLIENT_ID ||
-      !PAYPAL_CLIENT_SECRET
-    ) {
+        console.error(
+          `Missing environment variable: ${name}`
+        );
 
-      console.error(
-        "Missing production environment variables."
-      );
-
-      return res.status(500).json({
-        error: "Payment system is not configured."
-      });
-
+        return json(res, 500, {
+          error:
+            "Server configuration is incomplete."
+        });
+      }
     }
-
-
-    /* ==========================================
-       AUTHENTICATE USER
-    ========================================== */
-
-    const authorization =
-      req.headers.authorization;
-
-
-    if (!authorization) {
-
-      return res.status(401).json({
-        error: "You must be logged in."
-      });
-
-    }
-
-
-    const userResponse =
-      await fetch(
-        `${SUPABASE_URL}/auth/v1/user`,
-        {
-          method: "GET",
-
-          headers: {
-            apikey:
-              SUPABASE_PUBLISHABLE_KEY,
-
-            Authorization:
-              authorization
-          }
-        }
-      );
-
-
-    if (!userResponse.ok) {
-
-      return res.status(401).json({
-        error: "Invalid or expired session."
-      });
-
-    }
-
 
     const user =
-      await userResponse.json();
-
+      await getSupabaseUser(req);
 
     if (!user?.id) {
 
-      return res.status(401).json({
-        error: "Invalid user."
+      return json(res, 401, {
+        error:
+          "You must be logged in."
       });
-
     }
 
+    const body =
+      typeof req.body === "string"
+        ? JSON.parse(req.body)
+        : (req.body || {});
 
-    /* ==========================================
-       READ ORDER ID
-    ========================================== */
+    const orderID =
+      body.orderID;
 
-    const {
-      orderID
-    } = req.body || {};
+    if (
+      !orderID ||
+      typeof orderID !== "string"
+    ) {
 
-
-    if (!orderID) {
-
-      return res.status(400).json({
-        error: "Missing PayPal order ID."
+      return json(res, 400, {
+        error:
+          "Missing PayPal order ID."
       });
-
     }
-
-
-    /* ==========================================
-       PAYPAL LIVE OAUTH
-    ========================================== */
-
-    const credentials =
-      Buffer
-        .from(
-          `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
-        )
-        .toString("base64");
-
-
-    const tokenResponse =
-      await fetch(
-        "https://api-m.paypal.com/v1/oauth2/token",
-        {
-          method: "POST",
-
-          headers: {
-            Authorization:
-              `Basic ${credentials}`,
-
-            "Content-Type":
-              "application/x-www-form-urlencoded"
-          },
-
-          body:
-            "grant_type=client_credentials"
-        }
-      );
-
-
-    const tokenData =
-      await tokenResponse.json();
-
-
-    if (!tokenResponse.ok) {
-
-      console.error(
-        "PayPal OAuth error:",
-        tokenData
-      );
-
-      return res.status(500).json({
-        error: "PayPal authentication failed."
-      });
-
-    }
-
 
     const accessToken =
-      tokenData.access_token;
+      await getPayPalAccessToken();
 
+    /*
+      VERIFY PAYPAL ORDER
+    */
 
-    /* ==========================================
-       GET ORDER BEFORE CAPTURE
-    ========================================== */
+    const orderResult =
+      await paypalRequest(
+        `${PAYPAL_API}/v2/checkout/orders/${encodeURIComponent(orderID)}`,
 
-    const orderResponse =
-      await fetch(
-        `https://api-m.paypal.com/v2/checkout/orders/${encodeURIComponent(orderID)}`,
         {
           method: "GET",
 
@@ -189,427 +186,380 @@ export default async function handler(req, res) {
         }
       );
 
-
-    const existingOrder =
-      await orderResponse.json();
-
-
-    if (!orderResponse.ok) {
+    if (
+      !orderResult.response.ok
+    ) {
 
       console.error(
         "PayPal order lookup error:",
-        existingOrder
+        orderResult.data
       );
 
-      return res.status(400).json({
-        error: "PayPal order could not be verified."
+      return json(res, 502, {
+        error:
+          "Could not verify the PayPal order."
       });
-
     }
 
+    const order =
+      orderResult.data;
 
-    /* ==========================================
-       VERIFY ORDER OWNER + PRODUCT + PRICE
-    ========================================== */
+    const unit =
+      order.purchase_units?.[0];
 
-    const purchaseUnit =
-      existingOrder
-        ?.purchase_units?.[0];
+    const amount =
+      unit?.amount;
 
-
-    const paypalUserID =
-      purchaseUnit?.custom_id;
-
-
-    const paypalAmount =
-      purchaseUnit
-        ?.amount
-        ?.value;
-
-
-    const paypalCurrency =
-      purchaseUnit
-        ?.amount
-        ?.currency_code;
-
+    const customID =
+      unit?.custom_id;
 
     const referenceID =
-      purchaseUnit?.reference_id;
+      unit?.reference_id;
 
+    /*
+      VERIFY USER + COURSE + PRICE
+    */
 
     if (
-      paypalUserID !== user.id
+      customID !== user.id ||
+      referenceID !== COURSE_SLUG ||
+      amount?.currency_code !==
+        COURSE_CURRENCY ||
+      amount?.value !==
+        COURSE_PRICE
     ) {
 
       console.error(
-        "PayPal user mismatch."
-      );
-
-      return res.status(403).json({
-        error: "Payment does not belong to this account."
-      });
-
-    }
-
-
-    if (
-      referenceID !==
-      "agency-blueprint"
-    ) {
-
-      return res.status(400).json({
-        error: "Invalid course."
-      });
-
-    }
-
-
-    if (
-      paypalAmount !== "29.00" ||
-      paypalCurrency !== "USD"
-    ) {
-
-      console.error(
-        "Invalid payment:",
-        paypalAmount,
-        paypalCurrency
-      );
-
-      return res.status(400).json({
-        error: "Payment amount verification failed."
-      });
-
-    }
-
-
-    /* ==========================================
-       CAPTURE LIVE PAYMENT
-    ========================================== */
-
-    const captureResponse =
-      await fetch(
-        `https://api-m.paypal.com/v2/checkout/orders/${encodeURIComponent(orderID)}/capture`,
+        "PayPal order verification failed:",
         {
-          method: "POST",
-
-          headers: {
-            Authorization:
-              `Bearer ${accessToken}`,
-
-            "Content-Type":
-              "application/json"
-          },
-
-          body: "{}"
+          orderID,
+          customID,
+          referenceID,
+          amount
         }
       );
 
-
-    const capture =
-      await captureResponse.json();
-
-
-    /*
-     * PayPal may return the already-completed
-     * order if the request is repeated.
-     */
-
-    if (
-      !captureResponse.ok &&
-      capture?.name !==
-        "ORDER_ALREADY_CAPTURED"
-    ) {
-
-      console.error(
-        "PayPal capture error:",
-        capture
-      );
-
-      return res.status(400).json({
+      return json(res, 400, {
         error:
-          "PayPal payment could not be captured."
+          "PayPal order verification failed."
       });
-
     }
 
+    let captureData;
 
-    /* ==========================================
-       VERIFY FINAL PAYMENT STATUS
-    ========================================== */
+    /*
+      CAPTURE PAYMENT
+    */
 
     if (
-      capture.status !==
+      order.status ===
       "COMPLETED"
     ) {
 
-      return res.status(400).json({
+      captureData = order;
+
+    } else {
+
+      const captureResult =
+        await paypalRequest(
+
+          `${PAYPAL_API}/v2/checkout/orders/${encodeURIComponent(orderID)}/capture`,
+
+          {
+            method: "POST",
+
+            headers: {
+              Authorization:
+                `Bearer ${accessToken}`,
+
+              "Content-Type":
+                "application/json",
+
+              "PayPal-Request-Id":
+                `capture-${orderID}`
+            },
+
+            body: "{}"
+          }
+        );
+
+      if (
+        !captureResult.response.ok &&
+        captureResult.data?.name !==
+          "ORDER_ALREADY_CAPTURED"
+      ) {
+
+        console.error(
+          "PayPal capture error:",
+          captureResult.data
+        );
+
+        return json(res, 502, {
+          error:
+            "PayPal could not complete the payment."
+        });
+      }
+
+      captureData =
+        captureResult.data;
+    }
+
+    /*
+      PAYMENT MUST BE COMPLETED
+    */
+
+    if (
+      captureData?.status !==
+      "COMPLETED"
+    ) {
+
+      return json(res, 400, {
         error:
           "Payment was not completed."
       });
-
     }
 
+    /*
+      VERIFY CAPTURE AMOUNT
+    */
 
-    const capturedUnit =
-      capture
-        ?.purchase_units?.[0];
-
-
-    const capturedPayment =
-      capturedUnit
+    const capture =
+      captureData
+        .purchase_units?.[0]
         ?.payments
         ?.captures?.[0];
 
-
-    const capturedAmount =
-      capturedPayment
-        ?.amount
-        ?.value;
-
-
-    const capturedCurrency =
-      capturedPayment
-        ?.amount
-        ?.currency_code;
-
-
     if (
-      capturedAmount !== "29.00" ||
-      capturedCurrency !== "USD"
+      capture &&
+      (
+        capture.status !==
+          "COMPLETED" ||
+
+        capture.amount
+          ?.currency_code !==
+          COURSE_CURRENCY ||
+
+        capture.amount?.value !==
+          COURSE_PRICE
+      )
     ) {
 
-      console.error(
-        "Captured amount mismatch:",
-        capturedAmount,
-        capturedCurrency
-      );
-
-      return res.status(400).json({
+      return json(res, 400, {
         error:
-          "Captured payment amount could not be verified."
+          "Captured payment could not be verified."
       });
-
     }
 
+    /*
+      SUPABASE ADMIN HEADERS
 
-    /* ==========================================
-       GET COURSE FROM SUPABASE
-    ========================================== */
+      SERVICE ROLE KEY NEVER
+      GOES INTO FRONTEND CODE.
+    */
+
+    const supabaseHeaders = {
+
+      apikey:
+        process.env
+          .SUPABASE_SERVICE_ROLE_KEY,
+
+      Authorization:
+        `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+
+      "Content-Type":
+        "application/json",
+
+      Prefer:
+        "return=representation"
+    };
+
+    /*
+      FIND COURSE
+    */
 
     const courseResponse =
       await fetch(
-        `${SUPABASE_URL}/rest/v1/courses?slug=eq.agency-blueprint&select=id,slug,price`,
+
+        `${process.env.SUPABASE_URL}/rest/v1/courses?slug=eq.${encodeURIComponent(COURSE_SLUG)}&select=id,price`,
+
         {
-          method: "GET",
-
-          headers: {
-            apikey:
-              SUPABASE_SERVICE_ROLE_KEY,
-
-            Authorization:
-              `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
-          }
+          headers:
+            supabaseHeaders
         }
       );
-
 
     const courses =
       await courseResponse.json();
 
-
     if (
       !courseResponse.ok ||
-      !courses.length
+      !courses.length ||
+      Number(courses[0].price)
+        .toFixed(2) !==
+        COURSE_PRICE
     ) {
 
       console.error(
-        "Course lookup error:",
+        "Course verification error:",
         courses
       );
 
-      return res.status(500).json({
-        error: "Course not found."
+      return json(res, 500, {
+        error:
+          "Course configuration could not be verified."
       });
-
     }
 
+    const courseID =
+      courses[0].id;
 
-    const course =
-      courses[0];
+    /*
+      CHECK EXISTING PURCHASE
+    */
 
+    const existingResponse =
+      await fetch(
 
-    /* ==========================================
-       VERIFY DATABASE PRICE
-    ========================================== */
+        `${process.env.SUPABASE_URL}/rest/v1/purchases?user_id=eq.${encodeURIComponent(user.id)}&course_id=eq.${encodeURIComponent(courseID)}&select=id,status`,
+
+        {
+          headers:
+            supabaseHeaders
+        }
+      );
+
+    const existing =
+      await existingResponse.json();
 
     if (
-      Number(course.price) !==
-      29
+      !existingResponse.ok
     ) {
 
       console.error(
-        "Database price mismatch:",
-        course.price
+        "Purchase lookup error:",
+        existing
       );
 
-      return res.status(500).json({
+      return json(res, 500, {
         error:
-          "Course price configuration is invalid."
+          "Could not verify your course access."
       });
-
     }
 
+    /*
+      SAVE PURCHASE
+    */
 
-    /* ==========================================
-       CHECK EXISTING PURCHASE
-    ========================================== */
+    const purchasePayload = {
 
-    const existingPurchaseResponse =
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/purchases?user_id=eq.${encodeURIComponent(
-          user.id
-        )}&course_id=eq.${encodeURIComponent(
-          course.id
-        )}&select=id,status`,
-        {
-          method: "GET",
+      user_id:
+        user.id,
 
-          headers: {
-            apikey:
-              SUPABASE_SERVICE_ROLE_KEY,
+      course_id:
+        courseID,
 
-            Authorization:
-              `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
+      paypal_order_id:
+        orderID,
+
+      status:
+        "completed",
+
+      amount:
+        Number(COURSE_PRICE),
+
+      currency:
+        COURSE_CURRENCY
+    };
+
+    let purchaseResponse;
+
+    if (existing.length) {
+
+      purchaseResponse =
+        await fetch(
+
+          `${process.env.SUPABASE_URL}/rest/v1/purchases?id=eq.${encodeURIComponent(existing[0].id)}`,
+
+          {
+            method: "PATCH",
+
+            headers:
+              supabaseHeaders,
+
+            body:
+              JSON.stringify(
+                purchasePayload
+              )
           }
-        }
-      );
+        );
 
+    } else {
 
-    const existingPurchases =
-      await existingPurchaseResponse.json();
+      purchaseResponse =
+        await fetch(
 
+          `${process.env.SUPABASE_URL}/rest/v1/purchases`,
+
+          {
+            method: "POST",
+
+            headers:
+              supabaseHeaders,
+
+            body:
+              JSON.stringify(
+                purchasePayload
+              )
+          }
+        );
+    }
 
     if (
-      existingPurchaseResponse.ok &&
-      existingPurchases.length > 0 &&
-      existingPurchases[0].status ===
-        "completed"
+      !purchaseResponse.ok
     ) {
 
-      return res.status(200).json({
-
-        success: true,
-
-        course:
-          "agency-blueprint",
-
-        alreadyOwned:
-          true
-
-      });
-
-    }
-
-
-    /* ==========================================
-       SAVE VERIFIED PURCHASE
-    ========================================== */
-
-    const purchaseResponse =
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/purchases`,
-        {
-          method: "POST",
-
-          headers: {
-            apikey:
-              SUPABASE_SERVICE_ROLE_KEY,
-
-            Authorization:
-              `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-
-            "Content-Type":
-              "application/json",
-
-            Prefer:
-              "resolution=merge-duplicates,return=representation"
-          },
-
-          body:
-            JSON.stringify({
-
-              user_id:
-                user.id,
-
-              course_id:
-                course.id,
-
-              paypal_order_id:
-                orderID,
-
-              status:
-                "completed",
-
-              amount:
-                29.00,
-
-              currency:
-                "USD"
-
-            })
-        }
-      );
-
-
-    const purchase =
-      await purchaseResponse.json();
-
-
-    if (!purchaseResponse.ok) {
+      const purchaseError =
+        await purchaseResponse.text();
 
       console.error(
-        "Supabase purchase error:",
-        purchase
+        "Purchase save error:",
+        purchaseError
       );
 
-      return res.status(500).json({
+      return json(res, 500, {
         error:
-          "Payment succeeded but purchase could not be saved."
+          "Payment succeeded, but course access could not be saved. Contact support."
       });
-
     }
 
+    /*
+      SUCCESS
+    */
 
-    /* ==========================================
-       SUCCESS
-    ========================================== */
-
-    return res.status(200).json({
+    return json(res, 200, {
 
       success:
         true,
 
       course:
-        "agency-blueprint",
+        COURSE_SLUG,
 
-      purchase:
-        purchase
-
+      status:
+        "completed"
     });
-
 
   } catch (error) {
 
     console.error(
-      "Capture server error:",
+      "Capture order error:",
       error
     );
 
-    return res.status(500).json({
+    return json(res, 500, {
+
       error:
-        "Server error."
+        error.message ||
+        "Could not complete payment."
     });
-
   }
-
 }
