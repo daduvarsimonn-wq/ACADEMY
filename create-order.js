@@ -1,207 +1,167 @@
+const PAYPAL_API = "https://api-m.paypal.com";
+
+const COURSE_SLUG = "agency-blueprint";
+const COURSE_PRICE = "29.00";
+const COURSE_CURRENCY = "USD";
+
+function json(res, status, body) {
+  return res.status(status).json(body);
+}
+
+async function getSupabaseUser(req) {
+  const auth = req.headers.authorization || "";
+
+  if (!auth.startsWith("Bearer ")) {
+    return null;
+  }
+
+  const response = await fetch(
+    `${process.env.SUPABASE_URL}/auth/v1/user`,
+    {
+      method: "GET",
+      headers: {
+        apikey: process.env.SUPABASE_PUBLISHABLE_KEY,
+        Authorization: auth
+      }
+    }
+  );
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return response.json();
+}
+
+async function getPayPalAccessToken() {
+  const credentials = Buffer.from(
+    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+  ).toString("base64");
+
+  const response = await fetch(
+    `${PAYPAL_API}/v1/oauth2/token`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${credentials}`,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: "grant_type=client_credentials"
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.access_token) {
+    console.error("PayPal OAuth error:", data);
+
+    throw new Error(
+      "PayPal authentication failed."
+    );
+  }
+
+  return data.access_token;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
+    return json(res, 405, {
+      error: "Method not allowed."
     });
   }
 
   try {
-    /* ==========================================
-       REQUIRED ENVIRONMENT VARIABLES
-    ========================================== */
+    const required = [
+      "SUPABASE_URL",
+      "SUPABASE_PUBLISHABLE_KEY",
+      "PAYPAL_CLIENT_ID",
+      "PAYPAL_CLIENT_SECRET"
+    ];
 
-    const {
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY,
-      PAYPAL_CLIENT_ID,
-      PAYPAL_CLIENT_SECRET
-    } = process.env;
+    for (const name of required) {
+      if (!process.env[name]) {
+        console.error(
+          `Missing environment variable: ${name}`
+        );
 
-
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_PUBLISHABLE_KEY ||
-      !PAYPAL_CLIENT_ID ||
-      !PAYPAL_CLIENT_SECRET
-    ) {
-      console.error("Missing server environment variables.");
-
-      return res.status(500).json({
-        error: "Payment system is not configured."
-      });
+        return json(res, 500, {
+          error: "Server configuration is incomplete."
+        });
+      }
     }
 
+    const user = await getSupabaseUser(req);
 
-    /* ==========================================
-       AUTHENTICATE SUPABASE USER
-    ========================================== */
-
-    const authorization =
-      req.headers.authorization;
-
-    if (!authorization) {
-      return res.status(401).json({
+    if (!user?.id) {
+      return json(res, 401, {
         error: "You must be logged in."
       });
     }
 
+    const accessToken =
+      await getPayPalAccessToken();
 
-    const userResponse = await fetch(
-      `${SUPABASE_URL}/auth/v1/user`,
+    const response = await fetch(
+      `${PAYPAL_API}/v2/checkout/orders`,
       {
-        method: "GET",
+        method: "POST",
 
         headers: {
-          apikey: SUPABASE_PUBLISHABLE_KEY,
-          Authorization: authorization
-        }
+          Authorization:
+            `Bearer ${accessToken}`,
+
+          "Content-Type":
+            "application/json",
+
+          "PayPal-Request-Id":
+            `academy-${user.id}-${Date.now()}`
+        },
+
+        body: JSON.stringify({
+          intent: "CAPTURE",
+
+          purchase_units: [
+            {
+              reference_id:
+                COURSE_SLUG,
+
+              custom_id:
+                user.id,
+
+              description:
+                "ACADEMY — Agency Blueprint",
+
+              amount: {
+                currency_code:
+                  COURSE_CURRENCY,
+
+                value:
+                  COURSE_PRICE
+              }
+            }
+          ]
+        })
       }
     );
 
+    const data =
+      await response.json();
 
-    if (!userResponse.ok) {
-      return res.status(401).json({
-        error: "Invalid or expired session."
-      });
-    }
-
-
-    const user =
-      await userResponse.json();
-
-
-    if (!user?.id) {
-      return res.status(401).json({
-        error: "User authentication failed."
-      });
-    }
-
-
-    /* ==========================================
-       PAYPAL LIVE OAUTH
-    ========================================== */
-
-    const credentials =
-      Buffer
-        .from(
-          `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`
-        )
-        .toString("base64");
-
-
-    const tokenResponse =
-      await fetch(
-        "https://api-m.paypal.com/v1/oauth2/token",
-        {
-          method: "POST",
-
-          headers: {
-            Authorization:
-              `Basic ${credentials}`,
-
-            "Content-Type":
-              "application/x-www-form-urlencoded"
-          },
-
-          body:
-            "grant_type=client_credentials"
-        }
-      );
-
-
-    const tokenData =
-      await tokenResponse.json();
-
-
-    if (!tokenResponse.ok) {
-
+    if (!response.ok || !data.id) {
       console.error(
-        "PayPal OAuth error:",
-        tokenData
+        "PayPal create order error:",
+        data
       );
 
-      return res.status(500).json({
-        error: "PayPal authentication failed."
+      return json(res, 502, {
+        error:
+          "PayPal could not create the order."
       });
     }
 
-
-    /* ==========================================
-       CREATE LIVE PAYPAL ORDER
-    ========================================== */
-
-    const orderResponse =
-      await fetch(
-        "https://api-m.paypal.com/v2/checkout/orders",
-        {
-          method: "POST",
-
-          headers: {
-            Authorization:
-              `Bearer ${tokenData.access_token}`,
-
-            "Content-Type":
-              "application/json"
-          },
-
-          body: JSON.stringify({
-
-            intent: "CAPTURE",
-
-            purchase_units: [
-
-              {
-                reference_id:
-                  "agency-blueprint",
-
-                description:
-                  "ACADEMY — Agency Blueprint",
-
-                custom_id:
-                  user.id,
-
-                amount: {
-                  currency_code: "USD",
-                  value: "29.00"
-                }
-              }
-
-            ]
-
-          })
-        }
-      );
-
-
-    const order =
-      await orderResponse.json();
-
-
-    if (!orderResponse.ok) {
-
-      console.error(
-        "PayPal order creation error:",
-        order
-      );
-
-      return res.status(500).json({
-        error: "Could not create PayPal order."
-      });
-    }
-
-
-    if (!order.id) {
-
-      return res.status(500).json({
-        error: "PayPal did not return an order ID."
-      });
-    }
-
-
-    return res.status(200).json({
-      orderID: order.id
+    return json(res, 200, {
+      orderID: data.id
     });
-
 
   } catch (error) {
 
@@ -210,9 +170,10 @@ export default async function handler(req, res) {
       error
     );
 
-    return res.status(500).json({
-      error: "Server error."
+    return json(res, 500, {
+      error:
+        error.message ||
+        "Could not create order."
     });
-
   }
 }
