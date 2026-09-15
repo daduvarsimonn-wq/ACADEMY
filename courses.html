@@ -1,705 +1,1094 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Courses — ACADEMY.</title>
 
-<!-- SUPABASE -->
+<!-- PAYPAL LIVE -->
+<script src="https://www.paypal.com/sdk/js?client-id=BAAMT2HITp5Tx-SiZaFN5pbioLGdW4IFKI-o9UWTGponwofVYjaPHmXOtiERqGbc582-x0UUfsb68cUhik&currency=USD&intent=capture&components=buttons"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- PAYPAL LIVE -->
-<script src="https://www.paypal.com/sdk/js?client-id=BAAMT2HITp5Tx-SiZaFN5pbioLGdW4IFKI-o9UWTGponwofVYjaPHmXOtiERqGbc582-x0UUfsb68cUhik&currency=USD&intent=capture"></script>
-
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    background:#050505;
-    color:#f5f5f5;
-    font-family:Arial,Helvetica,sans-serif;
-    overflow-x:hidden;
+body {
+    background: #050505;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
 }
 
-a{
-    color:inherit;
-    text-decoration:none;
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
-button,input{
-    font:inherit;
+button,
+input {
+    font: inherit;
 }
 
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:-2;
-    pointer-events:none;
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+
     background:
-        radial-gradient(circle at 15% 10%,rgba(255,255,255,.07),transparent 28%),
-        radial-gradient(circle at 85% 40%,rgba(255,255,255,.04),transparent 30%);
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(255,255,255,.07),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 40%,
+            rgba(255,255,255,.04),
+            transparent 30%
+        );
 }
 
-body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:100;
-    pointer-events:none;
-    opacity:.025;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
 
-/* NAV */
+    opacity: .025;
 
-.navbar{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:78px;
-    padding:0 5vw;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    z-index:90;
-    background:rgba(5,5,5,.68);
-    backdrop-filter:blur(20px);
-    border-bottom:1px solid rgba(255,255,255,.07);
-}
-
-.logo{
-    font-size:20px;
-    font-weight:800;
-    letter-spacing:-1px;
-}
-
-.logo span{
-    color:#666;
-}
-
-.nav-links{
-    display:flex;
-    gap:30px;
-    color:#888;
-    font-size:12px;
-}
-
-.nav-links a{
-    transition:.3s ease;
-}
-
-.nav-links a:hover{
-    color:white;
-}
-
-.nav-actions{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.login{
-    color:#888;
-    font-size:12px;
-}
-
-.login:hover{
-    color:white;
-}
-
-.nav-btn{
-    padding:11px 17px;
-    border:1px solid rgba(255,255,255,.2);
-    border-radius:100px;
-    font-size:10px;
-    font-weight:700;
-    transition:.3s ease;
-}
-
-.nav-btn:hover{
-    background:white;
-    color:black;
-}
-
-/* HERO */
-
-.hero{
-    min-height:75vh;
-    padding:170px 7vw 100px;
-    display:flex;
-    align-items:center;
-    position:relative;
-    overflow:hidden;
-}
-
-.hero-grid{
-    position:absolute;
-    inset:0;
-    opacity:.12;
     background-image:
-        linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
-    background-size:80px 80px;
-    mask-image:linear-gradient(to bottom,black,transparent);
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-.hero-content{
-    position:relative;
-    z-index:2;
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 78px;
+
+    padding: 0 5vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 90;
+
+    background: rgba(5,5,5,.68);
+    backdrop-filter: blur(20px);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
 }
 
-.eyebrow{
-    color:#666;
-    font-family:monospace;
-    font-size:10px;
-    letter-spacing:3px;
-    margin-bottom:28px;
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+
+    letter-spacing: -1px;
 }
 
-.hero h1{
-    font-size:clamp(65px,11vw,145px);
-    line-height:.85;
-    letter-spacing:-8px;
+.logo span {
+    color: #666;
 }
 
-.hero h1 span{
-    color:#4d4d4d;
+.nav-links {
+    display: flex;
+    gap: 30px;
+
+    color: #888;
+
+    font-size: 12px;
 }
 
-.hero p{
-    max-width:580px;
-    margin-top:35px;
-    color:#777;
-    font-size:15px;
-    line-height:1.75;
+.nav-links a {
+    transition: .3s ease;
 }
 
-/* FILTERS */
-
-.filters{
-    padding:25px 7vw;
-    border-top:1px solid rgba(255,255,255,.08);
-    border-bottom:1px solid rgba(255,255,255,.08);
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
+.nav-links a:hover {
+    color: white;
 }
 
-.filter{
-    flex-shrink:0;
-    padding:9px 15px;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:100px;
-    color:#777;
-    background:transparent;
-    cursor:pointer;
-    font-size:10px;
-    transition:.3s ease;
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login {
+    color: #888;
+    font-size: 12px;
+}
+
+.login:hover {
+    color: white;
+}
+
+.nav-btn {
+    padding: 11px 17px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.2);
+
+    border-radius: 100px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    transition: .3s ease;
+}
+
+.nav-btn:hover {
+    background: white;
+    color: black;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: 75vh;
+
+    padding:
+        170px 7vw
+        100px;
+
+    display: flex;
+    align-items: center;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.hero-grid {
+    position: absolute;
+    inset: 0;
+
+    opacity: .12;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.06) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.06) 1px,
+            transparent 1px
+        );
+
+    background-size: 80px 80px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent
+        );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.eyebrow {
+    color: #666;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-size:
+        clamp(
+            65px,
+            11vw,
+            145px
+        );
+
+    line-height: .85;
+
+    letter-spacing: -8px;
+}
+
+.hero h1 span {
+    color: #4d4d4d;
+}
+
+.hero p {
+    max-width: 580px;
+
+    margin-top: 35px;
+
+    color: #777;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.filters {
+    padding:
+        25px 7vw;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    display: flex;
+
+    gap: 10px;
+
+    overflow-x: auto;
+}
+
+.filter {
+    flex-shrink: 0;
+
+    padding:
+        9px 15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 100px;
+
+    color: #777;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    transition: .3s ease;
 }
 
 .filter:hover,
-.filter.active{
-    background:white;
-    color:black;
-    border-color:white;
+.filter.active {
+    background: white;
+    color: black;
+
+    border-color: white;
 }
 
-/* LIBRARY */
 
-.library{
-    padding:120px 7vw 160px;
+/* =========================================================
+   COURSE LIBRARY
+========================================================= */
+
+.library {
+    padding:
+        120px 7vw
+        160px;
 }
 
-.section-label{
-    color:#555;
-    font-family:monospace;
-    font-size:10px;
-    letter-spacing:2px;
-    margin-bottom:22px;
+.section-label {
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 22px;
 }
 
-.library-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
-    margin-bottom:60px;
+.library-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: end;
+
+    margin-bottom: 60px;
 }
 
-.library-header h2{
-    font-size:clamp(48px,7vw,85px);
-    line-height:.9;
-    letter-spacing:-5px;
+.library-header h2 {
+    font-size:
+        clamp(
+            48px,
+            7vw,
+            85px
+        );
+
+    line-height: .9;
+
+    letter-spacing: -5px;
 }
 
-.library-header p{
-    max-width:320px;
-    color:#777;
-    font-size:13px;
-    line-height:1.7;
+.library-header p {
+    max-width: 320px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
 }
 
-/* GRID */
 
-.course-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:18px;
+/* =========================================================
+   COURSE GRID
+========================================================= */
+
+.course-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
 }
 
-/* CARD */
 
-.course-card{
-    min-height:430px;
-    padding:35px;
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    overflow:hidden;
-    border:1px solid rgba(255,255,255,.1);
-    background:linear-gradient(
-        135deg,
-        rgba(255,255,255,.05),
-        rgba(255,255,255,.012)
-    );
+/* =========================================================
+   COURSE CARD
+========================================================= */
+
+.course-card {
+    min-height: 430px;
+
+    padding: 35px;
+
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.05),
+            rgba(255,255,255,.012)
+        );
+
     transition:
         transform .4s ease,
         border-color .4s ease;
 }
 
-.course-card:hover{
-    transform:translateY(-8px);
-    border-color:rgba(255,255,255,.28);
+.course-card:hover {
+    transform: translateY(-8px);
+
+    border-color:
+        rgba(255,255,255,.28);
 }
 
-.course-card::before{
-    content:"";
-    position:absolute;
-    width:400px;
-    height:400px;
-    right:-180px;
-    top:-180px;
-    border-radius:50%;
-    background:radial-gradient(
-        circle,
-        rgba(255,255,255,.08),
-        transparent 65%
-    );
+.course-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 400px;
+    height: 400px;
+
+    right: -180px;
+    top: -180px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.08),
+            transparent 65%
+        );
 }
 
-.course-card>*{
-    position:relative;
-    z-index:2;
+.course-card > * {
+    position: relative;
+    z-index: 2;
 }
 
-.course-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.course-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
 }
 
-.course-number{
-    color:#555;
-    font-family:monospace;
-    font-size:10px;
+.course-number {
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 10px;
 }
 
-.locked-badge{
-    padding:7px 11px;
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:100px;
-    color:#888;
-    font-size:9px;
-    letter-spacing:1px;
+.locked-badge {
+    padding:
+        7px 11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    border-radius: 100px;
+
+    color: #888;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
 }
 
-.course-title{
-    font-size:clamp(38px,5vw,62px);
-    line-height:.9;
-    letter-spacing:-4px;
+.course-title {
+    font-size:
+        clamp(
+            38px,
+            5vw,
+            62px
+        );
+
+    line-height: .9;
+
+    letter-spacing: -4px;
 }
 
-.course-title span{
-    color:#555;
+.course-title span {
+    color: #555;
 }
 
-.course-description{
-    margin-top:20px;
-    max-width:500px;
-    color:#777;
-    font-size:13px;
-    line-height:1.7;
+.course-description {
+    margin-top: 20px;
+
+    max-width: 500px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
 }
 
-.course-bottom{
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
+.course-bottom {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: end;
 }
 
-.course-meta{
-    display:flex;
-    gap:25px;
+.course-meta {
+    display: flex;
+
+    gap: 25px;
 }
 
-.meta small{
-    display:block;
-    color:#555;
-    font-family:monospace;
-    font-size:8px;
-    margin-bottom:5px;
+.meta small {
+    display: block;
+
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    margin-bottom: 5px;
 }
 
-.meta strong{
-    font-size:11px;
-    font-weight:500;
+.meta strong {
+    font-size: 11px;
+
+    font-weight: 500;
 }
 
-.course-action{
-    padding:13px 17px;
-    border:1px solid rgba(255,255,255,.16);
-    border-radius:100px;
-    background:transparent;
-    color:#bbb;
-    cursor:pointer;
-    font-size:10px;
-    transition:.3s ease;
+.course-action {
+    padding:
+        13px 17px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.16);
+
+    border-radius: 100px;
+
+    background: transparent;
+
+    color: #bbb;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    transition: .3s ease;
 }
 
-.course-action:hover{
-    background:white;
-    color:black;
+.course-action:hover {
+    background: white;
+    color: black;
 }
 
-.coming{
-    opacity:.5;
+
+/* =========================================================
+   COMING SOON
+========================================================= */
+
+.coming {
+    opacity: .5;
 }
 
-.coming .course-action{
-    cursor:default;
+.coming .course-action {
+    cursor: default;
 }
 
-.coming .course-action:hover{
-    background:transparent;
-    color:#bbb;
+.coming .course-action:hover {
+    background: transparent;
+    color: #bbb;
 }
 
-/* CHECKOUT */
 
-.checkout-overlay{
-    position:fixed;
-    inset:0;
-    z-index:200;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:25px;
-    background:rgba(0,0,0,.78);
-    backdrop-filter:blur(18px);
+/* =========================================================
+   CHECKOUT OVERLAY
+========================================================= */
+
+.checkout-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 200;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(18px);
 }
 
-.checkout-overlay.show{
-    display:flex;
+.checkout-overlay.show {
+    display: flex;
 }
 
-.checkout{
-    width:min(920px,100%);
-    max-height:90vh;
-    overflow-y:auto;
-    position:relative;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    background:#0b0b0b;
-    border:1px solid rgba(255,255,255,.15);
-    box-shadow:0 40px 120px rgba(0,0,0,.7);
-    animation:checkoutIn .35s ease;
+.checkout {
+    width: min(920px, 100%);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    background: #0b0b0b;
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    box-shadow:
+        0 40px 120px
+        rgba(0,0,0,.7);
+
+    animation:
+        checkoutIn .35s ease;
 }
 
-@keyframes checkoutIn{
-    from{
-        opacity:0;
-        transform:translateY(25px) scale(.97);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
+@keyframes checkoutIn {
 
-.close{
-    position:absolute;
-    top:18px;
-    right:18px;
-    width:35px;
-    height:35px;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:50%;
-    background:#111;
-    color:#888;
-    cursor:pointer;
-    z-index:5;
-}
+    from {
+        opacity: 0;
 
-.close:hover{
-    color:white;
-}
-
-/* CHECKOUT LEFT */
-
-.checkout-info{
-    padding:50px;
-    border-right:1px solid rgba(255,255,255,.08);
-}
-
-.checkout-tag{
-    color:#666;
-    font-family:monospace;
-    font-size:9px;
-    letter-spacing:2px;
-    margin-bottom:25px;
-}
-
-.checkout-info h2{
-    font-size:48px;
-    line-height:.9;
-    letter-spacing:-3px;
-}
-
-.checkout-info h2 span{
-    color:#555;
-}
-
-.checkout-info p{
-    margin-top:25px;
-    color:#777;
-    font-size:13px;
-    line-height:1.7;
-}
-
-.includes{
-    margin-top:35px;
-}
-
-.includes-title{
-    color:#aaa;
-    font-size:11px;
-    margin-bottom:15px;
-}
-
-.includes div{
-    color:#777;
-    font-size:11px;
-    padding:9px 0;
-    border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-/* CHECKOUT RIGHT */
-
-.checkout-form{
-    padding:50px;
-}
-
-.price{
-    margin-bottom:30px;
-}
-
-.price small{
-    display:block;
-    color:#666;
-    font-family:monospace;
-    font-size:9px;
-    margin-bottom:5px;
-}
-
-.price strong{
-    font-size:55px;
-    letter-spacing:-3px;
-}
-
-.price span{
-    color:#666;
-    font-size:11px;
-}
-
-.form-title{
-    color:#aaa;
-    font-size:12px;
-    margin-bottom:15px;
-}
-
-.input{
-    width:100%;
-    padding:15px;
-    margin-bottom:12px;
-    outline:none;
-    border:1px solid rgba(255,255,255,.12);
-    background:#111;
-    color:white;
-    font-size:12px;
-    transition:.3s ease;
-}
-
-.input:focus{
-    border-color:rgba(255,255,255,.4);
-}
-
-/* PAYPAL */
-
-#paypal-button-container{
-    margin-top:15px;
-    width:100%;
-}
-
-.paypal-loading{
-    padding:16px;
-    border:1px solid rgba(255,255,255,.1);
-    color:#666;
-    text-align:center;
-    font-family:monospace;
-    font-size:9px;
-}
-
-.secure{
-    margin-top:18px;
-    text-align:center;
-    color:#555;
-    font-family:monospace;
-    font-size:8px;
-    letter-spacing:1px;
-}
-
-.payment-status{
-    display:none;
-    margin-top:15px;
-    padding:14px;
-    border:1px solid rgba(255,255,255,.12);
-    color:#aaa;
-    font-size:11px;
-    line-height:1.5;
-}
-
-.payment-status.show{
-    display:block;
-}
-
-.payment-status.success{
-    border-color:rgba(255,255,255,.35);
-    color:white;
-}
-
-.payment-status.error{
-    border-color:rgba(255,80,80,.35);
-    color:#ff9a9a;
-}
-
-/* FOOTER */
-
-footer{
-    padding:35px 7vw;
-    border-top:1px solid rgba(255,255,255,.1);
-    display:flex;
-    justify-content:space-between;
-    color:#555;
-    font-family:monospace;
-    font-size:10px;
-}
-
-.footer-links{
-    display:flex;
-    gap:25px;
-}
-
-.footer-links a:hover{
-    color:white;
-}
-
-/* MOBILE */
-
-@media(max-width:800px){
-
-    .navbar{
-        height:70px;
-        padding:0 6vw;
+        transform:
+            translateY(25px)
+            scale(.97);
     }
 
-    .nav-links{
-        display:none;
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
     }
 
-    .login{
-        display:none;
-    }
-
-    .hero{
-        padding:135px 6vw 90px;
-    }
-
-    .hero h1{
-        font-size:72px;
-        letter-spacing:-5px;
-    }
-
-    .library{
-        padding:100px 6vw 120px;
-    }
-
-    .library-header{
-        display:block;
-    }
-
-    .library-header p{
-        margin-top:25px;
-    }
-
-    .course-grid{
-        grid-template-columns:1fr;
-    }
-
-    .course-card{
-        min-height:420px;
-    }
-
-    .checkout{
-        grid-template-columns:1fr;
-        max-height:92vh;
-    }
-
-    .checkout-info{
-        padding:35px;
-        border-right:none;
-        border-bottom:1px solid rgba(255,255,255,.08);
-    }
-
-    .checkout-form{
-        padding:35px;
-    }
-
-    .checkout-info h2{
-        font-size:42px;
-    }
-
-    footer{
-        flex-direction:column;
-        gap:20px;
-    }
 }
+
+.close {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    width: 35px;
+    height: 35px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    background: #111;
+
+    color: #888;
+
+    cursor: pointer;
+
+    z-index: 5;
+}
+
+.close:hover {
+    color: white;
+}
+
+
+/* =========================================================
+   CHECKOUT LEFT
+========================================================= */
+
+.checkout-info {
+    padding: 50px;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.checkout-tag {
+    color: #666;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 25px;
+}
+
+.checkout-info h2 {
+    font-size: 48px;
+
+    line-height: .9;
+
+    letter-spacing: -3px;
+}
+
+.checkout-info h2 span {
+    color: #555;
+}
+
+.checkout-info p {
+    margin-top: 25px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.includes {
+    margin-top: 35px;
+}
+
+.includes-title {
+    color: #aaa;
+
+    font-size: 11px;
+
+    margin-bottom: 15px;
+}
+
+.includes div {
+    color: #777;
+
+    font-size: 11px;
+
+    padding: 9px 0;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.06);
+}
+
+
+/* =========================================================
+   CHECKOUT RIGHT
+========================================================= */
+
+.checkout-form {
+    padding: 50px;
+}
+
+.price {
+    margin-bottom: 30px;
+}
+
+.price small {
+    display: block;
+
+    color: #666;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    margin-bottom: 5px;
+}
+
+.price strong {
+    font-size: 55px;
+
+    letter-spacing: -3px;
+}
+
+.price span {
+    color: #666;
+
+    font-size: 11px;
+}
+
+.form-title {
+    color: #aaa;
+
+    font-size: 12px;
+
+    margin-bottom: 15px;
+}
+
+.input {
+    width: 100%;
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+    outline: none;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    background: #111;
+
+    color: white;
+
+    font-size: 12px;
+
+    transition: .3s ease;
+}
+
+.input:focus {
+    border-color:
+        rgba(255,255,255,.4);
+}
+
+
+/* =========================================================
+   PAYPAL
+========================================================= */
+
+#paypal-button-container {
+    margin-top: 15px;
+
+    width: 100%;
+}
+
+#paypal-button-container:empty {
+    min-height: 0;
+}
+
+.secure {
+    margin-top: 18px;
+
+    text-align: center;
+
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    letter-spacing: 1px;
+}
+
+.demo-note {
+    margin-top: 20px;
+
+    padding: 12px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    color: #555;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.payment-status {
+    display: none;
+
+    margin-top: 15px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    color: #aaa;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.payment-status.show {
+    display: block;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    padding:
+        35px 7vw;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.1);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 10px;
+}
+
+.footer-links {
+    display: flex;
+
+    gap: 25px;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 800px) {
+
+    .navbar {
+        height: 70px;
+
+        padding: 0 6vw;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .login {
+        display: none;
+    }
+
+    .hero {
+        padding:
+            135px 6vw
+            90px;
+    }
+
+    .hero h1 {
+        font-size: 72px;
+
+        letter-spacing: -5px;
+    }
+
+    .library {
+        padding:
+            100px 6vw
+            120px;
+    }
+
+    .library-header {
+        display: block;
+    }
+
+    .library-header p {
+        margin-top: 20px;
+    }
+
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .course-card {
+        min-height: 440px;
+    }
+
+    .course-bottom {
+        display: block;
+    }
+
+    .course-meta {
+        margin-bottom: 22px;
+    }
+
+    .checkout {
+        grid-template-columns: 1fr;
+
+        max-height: 92vh;
+    }
+
+    .checkout-info {
+        border-right: none;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.08);
+
+        padding: 35px;
+    }
+
+    .checkout-form {
+        padding: 35px;
+    }
+
+    .checkout-info h2 {
+        font-size: 40px;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 20px;
+
+        padding:
+            30px 6vw;
+    }
+
+}
+
+@media(max-width: 430px) {
+
+    .hero h1 {
+        font-size: 63px;
+    }
+
+    .course-card {
+        padding: 25px;
+    }
+
+    .course-title {
+        font-size: 42px;
+    }
+
+    .course-meta {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap: 15px;
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<!-- NAVBAR -->
+
+<!-- =======================================================
+     NAVBAR
+======================================================= -->
 
 <nav class="navbar">
 
@@ -708,21 +1097,43 @@ footer{
     </a>
 
     <div class="nav-links">
-        <a href="index.html">HOME</a>
-        <a href="courses.html">COURSES</a>
-        <a href="pricing.html">PRICING</a>
-        <a href="about.html">ABOUT</a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="courses.html">
+            Courses
+        </a>
+
+        <a href="pricing.html">
+            Pricing
+        </a>
+
+        <a href="about.html">
+            About
+        </a>
+
     </div>
 
     <div class="nav-actions">
-        <a href="login.html" class="login">LOGIN</a>
-        <a href="dashboard.html" class="nav-btn">DASHBOARD</a>
+
+        <a href="login.html" class="login">
+            Login
+        </a>
+
+        <a href="dashboard.html" class="nav-btn">
+            DASHBOARD
+        </a>
+
     </div>
 
 </nav>
 
 
-<!-- HERO -->
+<!-- =======================================================
+     HERO
+======================================================= -->
 
 <section class="hero">
 
@@ -731,7 +1142,7 @@ footer{
     <div class="hero-content">
 
         <div class="eyebrow">
-            ACADEMY · KNOWLEDGE / SKILLS / EXECUTION
+            ACADEMY. · COURSE LIBRARY
         </div>
 
         <h1>
@@ -741,9 +1152,9 @@ footer{
         </h1>
 
         <p>
-            Practical courses designed to help you build real skills,
-            launch real projects, and turn knowledge into something
-            you can actually use.
+            Practical courses designed around real skills,
+            real projects and real outcomes. Choose your
+            next skill and start building.
         </p>
 
     </div>
@@ -751,12 +1162,14 @@ footer{
 </section>
 
 
-<!-- FILTERS -->
+<!-- =======================================================
+     FILTERS
+======================================================= -->
 
 <div class="filters">
 
     <button class="filter active" data-filter="all">
-        ALL COURSES
+        ALL
     </button>
 
     <button class="filter" data-filter="business">
@@ -771,31 +1184,37 @@ footer{
         DESIGN
     </button>
 
-    <button class="filter" data-filter="development">
-        DEVELOPMENT
+    <button class="filter" data-filter="coming">
+        COMING SOON
     </button>
 
 </div>
 
 
-<!-- COURSE LIBRARY -->
+<!-- =======================================================
+     LIBRARY
+======================================================= -->
 
 <section class="library">
 
-    <div class="section-label">
-        001 — COURSE LIBRARY
-    </div>
-
     <div class="library-header">
 
-        <h2>
-            Choose<br>
-            Your Path.
-        </h2>
+        <div>
+
+            <div class="section-label">
+                / COURSE LIBRARY
+            </div>
+
+            <h2>
+                Choose<br>
+                your path.
+            </h2>
+
+        </div>
 
         <p>
-            One skill at a time. Every course is built around
-            practical knowledge, real projects, and execution.
+            Start with one course and build
+            your knowledge step by step.
         </p>
 
     </div>
@@ -804,19 +1223,27 @@ footer{
     <div class="course-grid">
 
 
-        <!-- COURSE 001 -->
+        <!-- =================================================
+             AGENCY BLUEPRINT
+        ================================================== -->
 
-        <article class="course-card" data-category="business">
+        <article
+            class="course-card"
+            data-category="business"
+        >
 
             <div class="course-top">
 
-                <div class="course-number">
-                    COURSE / 001
-                </div>
+                <span class="course-number">
+                    COURSE · 001
+                </span>
 
-                <div class="locked-badge" id="agencyBadge">
-                    LOCKED
-                </div>
+                <span
+                    class="locked-badge"
+                    id="agencyBadge"
+                >
+                    🔒 LOCKED
+                </span>
 
             </div>
 
@@ -824,15 +1251,20 @@ footer{
             <div>
 
                 <h3 class="course-title">
+
                     AGENCY<br>
                     <span>BLUEPRINT</span>
+
                 </h3>
 
+
                 <p class="course-description">
+
                     Build a digital agency from zero.
                     Learn positioning, offers, pricing,
-                    outreach, sales, delivery, systems,
-                    AI, hiring and scaling.
+                    outreach, sales, delivery, AI,
+                    automation and scaling.
+
                 </p>
 
             </div>
@@ -843,21 +1275,45 @@ footer{
                 <div class="course-meta">
 
                     <div class="meta">
-                        <small>LESSONS</small>
-                        <strong>25</strong>
+
+                        <small>
+                            LESSONS
+                        </small>
+
+                        <strong>
+                            25
+                        </strong>
+
                     </div>
 
-                    <div class="meta">
-                        <small>LEVEL</small>
-                        <strong>ALL</strong>
-                    </div>
 
                     <div class="meta">
-                        <small>PRICE</small>
-                        <strong>$29</strong>
+
+                        <small>
+                            LEVEL
+                        </small>
+
+                        <strong>
+                            ALL LEVELS
+                        </strong>
+
+                    </div>
+
+
+                    <div class="meta">
+
+                        <small>
+                            PRICE
+                        </small>
+
+                        <strong>
+                            $29
+                        </strong>
+
                     </div>
 
                 </div>
+
 
                 <button
                     class="course-action"
@@ -872,55 +1328,72 @@ footer{
         </article>
 
 
-        <!-- COURSE 002 -->
+        <!-- =================================================
+             AI MASTERY
+        ================================================== -->
 
-        <article class="course-card coming" data-category="ai">
+        <article
+            class="course-card coming"
+            data-category="ai coming"
+        >
 
             <div class="course-top">
 
-                <div class="course-number">
-                    COURSE / 002
-                </div>
+                <span class="course-number">
+                    COURSE · 002
+                </span>
 
-                <div class="locked-badge">
+                <span class="locked-badge">
                     COMING SOON
-                </div>
+                </span>
 
             </div>
+
 
             <div>
 
                 <h3 class="course-title">
+
                     AI<br>
                     <span>MASTERY</span>
+
                 </h3>
 
+
                 <p class="course-description">
+
                     Learn how to use modern AI tools
-                    to think faster, create better,
-                    automate workflows and build
-                    powerful systems.
+                    for productivity, content, research,
+                    automation and creative work.
+
                 </p>
 
             </div>
+
 
             <div class="course-bottom">
 
                 <div class="course-meta">
 
                     <div class="meta">
-                        <small>STATUS</small>
-                        <strong>SOON</strong>
-                    </div>
 
-                    <div class="meta">
-                        <small>LEVEL</small>
-                        <strong>ALL</strong>
+                        <small>
+                            STATUS
+                        </small>
+
+                        <strong>
+                            SOON
+                        </strong>
+
                     </div>
 
                 </div>
 
-                <button class="course-action">
+
+                <button
+                    class="course-action"
+                    onclick="comingSoon()"
+                >
                     COMING SOON
                 </button>
 
@@ -929,54 +1402,76 @@ footer{
         </article>
 
 
-        <!-- COURSE 003 -->
+        <!-- =================================================
+             WEB DESIGN PRO
+        ================================================== -->
 
-        <article class="course-card coming" data-category="design">
+        <article
+            class="course-card coming"
+            data-category="design coming"
+        >
 
             <div class="course-top">
 
-                <div class="course-number">
-                    COURSE / 003
-                </div>
+                <span class="course-number">
+                    COURSE · 003
+                </span>
 
-                <div class="locked-badge">
+                <span class="locked-badge">
                     COMING SOON
-                </div>
+                </span>
 
             </div>
+
 
             <div>
 
                 <h3 class="course-title">
-                    WEB<br>
-                    <span>DESIGN PRO</span>
+
+                    WEB DESIGN<br>
+                    <span>PRO</span>
+
                 </h3>
 
+
                 <p class="course-description">
-                    Learn how to design premium,
-                    modern websites and turn ideas
-                    into professional digital experiences.
+
+                    Learn modern web design,
+                    frontend development, visual systems,
+                    animations and creative direction.
+
                 </p>
 
             </div>
+
 
             <div class="course-bottom">
 
                 <div class="course-meta">
 
-                    <div class="meta">
-                        <small>STATUS</small>
-                        <strong>SOON</strong>
-                    </div>
+                    <div class="course-meta">
 
-                    <div class="meta">
-                        <small>LEVEL</small>
-                        <strong>ALL</strong>
+                        <div class="meta">
+
+                            <small>
+                                STATUS
+                            </small>
+
+                            <strong>
+                                SOON
+                            </strong>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-                <button class="course-action">
+
+                <button
+                    class="course-action"
+                    onclick="comingSoon()"
+                >
                     COMING SOON
                 </button>
 
@@ -990,13 +1485,23 @@ footer{
 </section>
 
 
-<!-- CHECKOUT -->
+<!-- =======================================================
+     CHECKOUT OVERLAY
+======================================================= -->
 
-<div class="checkout-overlay" id="checkoutOverlay">
+<div
+    class="checkout-overlay"
+    id="checkoutOverlay"
+    onclick="closeOutside(event)"
+>
 
     <div class="checkout">
 
-        <button class="close" onclick="closeCheckout()">
+
+        <button
+            class="close"
+            onclick="closeCheckout()"
+        >
             ×
         </button>
 
@@ -1006,34 +1511,61 @@ footer{
         <div class="checkout-info">
 
             <div class="checkout-tag">
-                ACADEMY / COURSE 001
+                ACADEMY. · CHECKOUT
             </div>
 
+
             <h2>
+
                 AGENCY<br>
                 <span>BLUEPRINT</span>
+
             </h2>
 
+
             <p>
-                Build a digital agency from zero.
-                A practical 25-lesson system covering
-                the complete agency journey.
+
+                Get full access to the complete
+                25-lesson Agency Blueprint course
+                and learn how to build a modern
+                digital agency from zero.
+
             </p>
+
 
             <div class="includes">
 
                 <div class="includes-title">
-                    WHAT YOU GET
+                    YOUR ACCESS INCLUDES
                 </div>
 
-                <div>01 — 25 practical lessons</div>
-                <div>02 — Agency positioning</div>
-                <div>03 — Offer & pricing systems</div>
-                <div>04 — Client acquisition</div>
-                <div>05 — Sales & closing</div>
-                <div>06 — Delivery systems</div>
-                <div>07 — AI & automation</div>
-                <div>08 — Hiring & scaling</div>
+                <div>
+                    ✓ 25 structured lessons
+                </div>
+
+                <div>
+                    ✓ Agency business model
+                </div>
+
+                <div>
+                    ✓ Offer & pricing systems
+                </div>
+
+                <div>
+                    ✓ Client acquisition
+                </div>
+
+                <div>
+                    ✓ Sales & closing
+                </div>
+
+                <div>
+                    ✓ AI & automation
+                </div>
+
+                <div>
+                    ✓ Scaling systems
+                </div>
 
             </div>
 
@@ -1047,7 +1579,7 @@ footer{
             <div class="price">
 
                 <small>
-                    ONE-TIME PAYMENT
+                    ONE-TIME ACCESS
                 </small>
 
                 <strong>
@@ -1062,44 +1594,51 @@ footer{
 
 
             <div class="form-title">
-                ACCOUNT
+                Create your student access
             </div>
 
 
             <input
-                type="text"
-                id="studentName"
                 class="input"
-                placeholder="Your full name"
+                id="checkoutName"
+                type="text"
+                placeholder="Full name"
                 autocomplete="name"
             >
 
+
             <input
-                type="email"
-                id="studentEmail"
                 class="input"
-                placeholder="Your account email"
+                id="checkoutEmail"
+                type="email"
+                placeholder="Email address"
                 autocomplete="email"
             >
 
 
-            <div
-                id="paypal-button-container"
-            >
-                <div class="paypal-loading">
-                    LOADING SECURE CHECKOUT...
-                </div>
-            </div>
+            <!-- PAYPAL BUTTONS -->
+
+            <div id="paypal-button-container"></div>
 
 
             <div
-                id="paymentStatus"
                 class="payment-status"
+                id="paymentStatus"
             ></div>
 
 
             <div class="secure">
-                SECURE CHECKOUT · PAYPAL · ONE-TIME PAYMENT
+                🔒 PAYPAL SECURE CHECKOUT · ACADEMY.
+            </div>
+
+
+            <div class="demo-note">
+
+                SANDBOX MODE: You are currently testing
+                PayPal. No real $29 payment will be taken.
+                Use your PayPal Sandbox buyer account
+                when PayPal asks you to sign in.
+
             </div>
 
         </div>
@@ -1109,7 +1648,9 @@ footer{
 </div>
 
 
-<!-- FOOTER -->
+<!-- =======================================================
+     FOOTER
+======================================================= -->
 
 <footer>
 
@@ -1117,186 +1658,128 @@ footer{
         © 2026 ACADEMY.
     </div>
 
+
     <div class="footer-links">
-        <a href="about.html">ABOUT</a>
-        <a href="pricing.html">PRICING</a>
-        <a href="login.html">LOGIN</a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="pricing.html">
+            Pricing
+        </a>
+
+        <a href="about.html">
+            About
+        </a>
+
+        <a href="login.html">
+            Login
+        </a>
+
     </div>
 
 </footer>
 
 
+<!-- =======================================================
+     JAVASCRIPT
+======================================================= -->
+
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SUPABASE_URL =
-    "https://jbhpkkwpdsyjbgizqtqf.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_odgH5ZbkfIhTPSfJO6ubcA_RAXUWYIA";
-
-const supabaseClient =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
-
 
 /* =========================================================
-   COURSE
+   CONFIG
 ========================================================= */
 
-const COURSE_SLUG =
-    "agency-blueprint";
+const COURSE_PRICE = "29.00";
 
-const COURSE_PRICE =
-    "29.00";
+const COURSE_NAME =
+    "ACADEMY. — Agency Blueprint";
+
+const SUPABASE_URL = "https://jbhpkkwpdsyjbgizqtqf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_odgH5ZbkfIhTPSfJO6ubcA_RAXUWYIA";
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
 
 
 /* =========================================================
    ELEMENTS
 ========================================================= */
 
-const overlay =
-    document.getElementById("checkoutOverlay");
+const checkoutOverlay =
+    document.getElementById(
+        "checkoutOverlay"
+    );
 
 const paypalContainer =
-    document.getElementById("paypal-button-container");
+    document.getElementById(
+        "paypal-button-container"
+    );
 
-const statusBox =
-    document.getElementById("paymentStatus");
+const paymentStatus =
+    document.getElementById(
+        "paymentStatus"
+    );
 
 const nameInput =
-    document.getElementById("studentName");
+    document.getElementById(
+        "checkoutName"
+    );
 
 const emailInput =
-    document.getElementById("studentEmail");
-
-const agencyAction =
-    document.getElementById("agencyAction");
-
-const agencyBadge =
-    document.getElementById("agencyBadge");
+    document.getElementById(
+        "checkoutEmail"
+    );
 
 
 /* =========================================================
-   STATUS
+   CHECK IF ALREADY UNLOCKED
 ========================================================= */
 
-function showStatus(message, type = ""){
+async function checkUnlocked() {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
 
-    statusBox.textContent = message;
+        const { data: course } = await supabaseClient
+            .from("courses")
+            .select("id")
+            .eq("slug", "agency-blueprint")
+            .single();
 
-    statusBox.className =
-        "payment-status show " + type;
-}
+        if (!course) return;
 
-function clearStatus(){
-
-    statusBox.textContent = "";
-
-    statusBox.className =
-        "payment-status";
-}
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-async function getCurrentUser(){
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth.getUser();
-
-    if(error){
-        return null;
-    }
-
-    return data.user;
-}
-
-
-/* =========================================================
-   CHECK OWNERSHIP
-========================================================= */
-
-async function checkOwnership(){
-
-    const user =
-        await getCurrentUser();
-
-    if(!user){
-        return false;
-    }
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
+        const { data: purchase } = await supabaseClient
             .from("purchases")
-            .select(`
-                id,
-                status,
-                course_id,
-                courses!inner(slug)
-            `)
-            .eq("user_id", user.id)
+            .select("id")
+            .eq("user_id", session.user.id)
+            .eq("course_id", course.id)
             .eq("status", "completed")
-            .eq("courses.slug", COURSE_SLUG)
             .maybeSingle();
 
-    if(error){
-        console.log("Ownership check:", error);
-        return false;
+        if (purchase) {
+            const badge = document.getElementById("agencyBadge");
+            const action = document.getElementById("agencyAction");
+
+            if (badge) {
+                badge.innerHTML = "✓ UNLOCKED";
+                badge.classList.add("open-badge");
+            }
+
+            if (action) {
+                action.innerHTML = "OPEN COURSE →";
+                action.onclick = function() {
+                    window.location.href = "lesson.html";
+                };
+            }
+        }
     }
-
-    return !!data;
-}
-
-
-/* =========================================================
-   UPDATE COURSE BUTTON
-========================================================= */
-
-async function updateCourseButton(){
-
-    const owned =
-        await checkOwnership();
-
-    if(owned){
-
-        agencyBadge.textContent =
-            "OWNED";
-
-        agencyAction.textContent =
-            "CONTINUE COURSE →";
-
-        agencyAction.onclick =
-            function(){
-                window.location.href =
-                    "lesson.html?course=agency-blueprint";
-            };
-
-    }else{
-
-        agencyBadge.textContent =
-            "LOCKED";
-
-        agencyAction.textContent =
-            "UNLOCK COURSE →";
-
-        agencyAction.onclick =
-            function(){
-                openCheckout();
-            };
+    catch (error) {
+        console.error("Unlock check error:", error);
     }
 }
 
@@ -1305,48 +1788,27 @@ async function updateCourseButton(){
    OPEN CHECKOUT
 ========================================================= */
 
-async function openCheckout(){
+async function openCheckout() {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
 
-    clearStatus();
+        if (!session) {
+            window.location.href = "login.html";
+            return;
+        }
 
-    const user =
-        await getCurrentUser();
+        checkoutOverlay.classList.add("show");
+        document.body.style.overflow = "hidden";
+        paymentStatus.classList.remove("show");
 
-    if(!user){
-
-        window.location.href =
-            "login.html?redirect=courses.html";
-
-        return;
+        if (paypalContainer.children.length === 0) {
+            renderPayPal();
+        }
     }
-
-
-    nameInput.value =
-        user.user_metadata?.full_name || "";
-
-    emailInput.value =
-        user.email || "";
-
-
-    const owned =
-        await checkOwnership();
-
-    if(owned){
-
-        window.location.href =
-            "lesson.html?course=agency-blueprint";
-
-        return;
+    catch (error) {
+        console.error(error);
+        window.location.href = "login.html";
     }
-
-
-    overlay.classList.add("show");
-
-    document.body.style.overflow =
-        "hidden";
-
-
-    renderPayPal();
 }
 
 
@@ -1354,392 +1816,295 @@ async function openCheckout(){
    CLOSE CHECKOUT
 ========================================================= */
 
-function closeCheckout(){
+function closeCheckout() {
 
-    overlay.classList.remove("show");
+    checkoutOverlay.classList.remove(
+        "show"
+    );
 
     document.body.style.overflow =
         "";
 
-    clearStatus();
 }
 
 
 /* =========================================================
-   CLOSE WHEN CLICKING BACKDROP
+   CLOSE OUTSIDE
 ========================================================= */
 
-overlay.addEventListener(
-    "click",
-    function(event){
+function closeOutside(event) {
 
-        if(event.target === overlay){
-            closeCheckout();
-        }
+    if (
+        event.target ===
+        checkoutOverlay
+    ) {
+
+        closeCheckout();
 
     }
-);
+
+}
+
+
+/* =========================================================
+   SHOW STATUS
+========================================================= */
+
+function showStatus(message) {
+
+    paymentStatus.innerText =
+        message;
+
+    paymentStatus.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   VALIDATE STUDENT
+========================================================= */
+
+function validateStudent() {
+
+    const name =
+        nameInput.value.trim();
+
+    const email =
+        emailInput.value.trim();
+
+
+    if (!name) {
+
+        alert(
+            "Please enter your full name first."
+        );
+
+        nameInput.focus();
+
+        return false;
+
+    }
+
+
+    if (
+        !email ||
+        !email.includes("@") ||
+        !email.includes(".")
+    ) {
+
+        alert(
+            "Please enter a valid email address."
+        );
+
+        emailInput.focus();
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
 
 
 /* =========================================================
    PAYPAL
 ========================================================= */
 
-let paypalRendered = false;
+function renderPayPal() {
 
-function renderPayPal(){
-
-    if(paypalRendered){
+    if (typeof paypal === "undefined") {
+        showStatus("PayPal could not load. Please refresh the page and try again.");
         return;
     }
 
-    if(
-        typeof paypal === "undefined" ||
-        !paypal.Buttons
-    ){
-
-        paypalContainer.innerHTML = "";
-
-        const error =
-            document.createElement("div");
-
-        error.className =
-            "paypal-loading";
-
-        error.textContent =
-            "PAYPAL CHECKOUT COULD NOT LOAD.";
-
-        paypalContainer.appendChild(error);
-
+    if (typeof supabase === "undefined") {
+        showStatus("Secure checkout could not load. Please refresh the page.");
         return;
     }
-
-
-    paypalContainer.innerHTML = "";
-
-    paypalRendered = true;
-
 
     paypal.Buttons({
 
-        style:{
-            layout:"vertical",
-            shape:"rect",
-            label:"paypal",
-            height:48
+        style: {
+            layout: "vertical",
+            color: "gold",
+            shape: "rect",
+            label: "paypal",
+            height: 48
         },
 
-
-        /* =================================================
-           CREATE ORDER
-        ================================================= */
-
-        async createOrder(){
-
-            clearStatus();
-
-
-            const user =
-                await getCurrentUser();
-
-            if(!user){
-
-                window.location.href =
-                    "login.html?redirect=courses.html";
-
-                throw new Error(
-                    "Please log in first."
-                );
-            }
-
-
-            const name =
-                nameInput.value.trim();
-
-            const email =
-                emailInput.value.trim();
-
-
-            if(!name){
-
-                showStatus(
-                    "Please enter your full name.",
-                    "error"
-                );
-
-                throw new Error(
-                    "Name required."
-                );
-            }
-
-
-            if(!email){
-
-                showStatus(
-                    "Please enter your email.",
-                    "error"
-                );
-
-                throw new Error(
-                    "Email required."
-                );
-            }
-
-
-            if(email.toLowerCase() !==
-               (user.email || "").toLowerCase()){
-
-                showStatus(
-                    "Use the same email as your ACADEMY account.",
-                    "error"
-                );
-
-                throw new Error(
-                    "Email mismatch."
-                );
-            }
-
-
-            showStatus(
-                "Creating your secure PayPal order..."
-            );
-
-
-            const session =
-                await supabaseClient.auth.getSession();
-
-            const accessToken =
-                session.data.session?.access_token;
-
-
-            if(!accessToken){
-
-                window.location.href =
-                    "login.html?redirect=courses.html";
-
-                throw new Error(
-                    "Session expired."
-                );
-            }
-
-
-            const response =
-                await fetch(
-                    "/api/create-order",
-                    {
-                        method:"POST",
-
-                        headers:{
-                            "Content-Type":
-                                "application/json",
-
-                            "Authorization":
-                                "Bearer " + accessToken
-                        },
-
-                        body:JSON.stringify({
-                            courseSlug:COURSE_SLUG
-                        })
-                    }
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if(!response.ok){
-
-                throw new Error(
-                    result.error ||
-                    "Could not create PayPal order."
-                );
-            }
-
-
-            if(!result.orderID){
-
-                throw new Error(
-                    "PayPal did not return an order ID."
-                );
-            }
-
-
-            clearStatus();
-
-            return result.orderID;
-        },
-
-
-        /* =================================================
-           APPROVE
-        ================================================= */
-
-        async onApprove(data){
-
-            try{
-
-                showStatus(
-                    "Payment approved. Confirming your purchase..."
-                );
-
-
-                const session =
+        /* ===============================================
+           CREATE ORDER — SERVER SIDE
+        =============================================== */
+        createOrder: async function() {
+            try {
+                const { data: { session } } =
                     await supabaseClient.auth.getSession();
 
-                const accessToken =
-                    session.data.session?.access_token;
+                if (!session) {
+                    showStatus("Please log in before purchasing this course.");
+                    setTimeout(function() {
+                        window.location.href = "login.html";
+                    }, 900);
+                    throw new Error("LOGIN_REQUIRED");
+                }
 
+                const response = await fetch("/api/create-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + session.access_token
+                    }
+                });
 
-                if(!accessToken){
+                const data = await response.json().catch(function() {
+                    return {};
+                });
 
+                if (!response.ok || !data.orderID) {
+                    console.error("Create order error:", data);
                     throw new Error(
-                        "Your session expired. Please log in again."
+                        data.error || "Could not create PayPal order."
                     );
                 }
 
+                return data.orderID;
+            }
+            catch (error) {
+                console.error("PayPal createOrder error:", error);
 
-                const response =
-                    await fetch(
-                        "/api/capture-order",
-                        {
-                            method:"POST",
-
-                            headers:{
-                                "Content-Type":
-                                    "application/json",
-
-                                "Authorization":
-                                    "Bearer " + accessToken
-                            },
-
-                            body:JSON.stringify({
-                                orderID:data.orderID,
-                                courseSlug:COURSE_SLUG
-                            })
-                        }
-                    );
-
-
-                const result =
-                    await response.json();
-
-
-                if(!response.ok){
-
-                    throw new Error(
-                        result.error ||
-                        "Payment verification failed."
+                if (error.message !== "LOGIN_REQUIRED") {
+                    showStatus(
+                        error.message ||
+                        "PayPal could not create the checkout. Please try again."
                     );
                 }
 
+                throw error;
+            }
+        },
 
-                if(!result.success){
+        /* ===============================================
+           PAYMENT APPROVED — SERVER SIDE CAPTURE
+        =============================================== */
+        onApprove: async function(data) {
+            try {
+                showStatus("Payment approved. Securely completing your purchase...");
 
-                    throw new Error(
-                        "Purchase could not be confirmed."
-                    );
+                const { data: { session } } =
+                    await supabaseClient.auth.getSession();
+
+                if (!session) {
+                    throw new Error("Your login session expired. Please log in again.");
                 }
 
-
-                showStatus(
-                    "Payment complete. Your course is now unlocked.",
-                    "success"
-                );
-
-
-                agencyBadge.textContent =
-                    "OWNED";
-
-                agencyAction.textContent =
-                    "CONTINUE COURSE →";
-
-
-                setTimeout(
-                    function(){
-
-                        window.location.href =
-                            "lesson.html?course=agency-blueprint";
-
+                const response = await fetch("/api/capture-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + session.access_token
                     },
-                    1200
-                );
+                    body: JSON.stringify({
+                        orderID: data.orderID
+                    })
+                });
 
+                const result = await response.json().catch(function() {
+                    return {};
+                });
 
-            }catch(error){
+                if (!response.ok || !result.success) {
+                    console.error("Capture order error:", result);
+                    throw new Error(
+                        result.error || "Payment could not be completed."
+                    );
+                }
 
-                console.error(
-                    "Capture error:",
-                    error
-                );
+                showStatus("Payment successful! Your course is unlocked. Opening...");
 
+                setTimeout(function() {
+                    window.location.href = "lesson.html";
+                }, 900);
+            }
+            catch (error) {
+                console.error("PayPal capture error:", error);
                 showStatus(
                     error.message ||
-                    "Something went wrong while confirming your payment.",
-                    "error"
+                    "Payment could not be completed. Please try again."
                 );
             }
         },
 
-
-        /* =================================================
+        /* ===============================================
            CANCEL
-        ================================================= */
-
-        onCancel(){
-
-            showStatus(
-                "Payment cancelled. No charge was completed."
-            );
+        =============================================== */
+        onCancel: function() {
+            showStatus("Payment cancelled.");
         },
 
-
-        /* =================================================
+        /* ===============================================
            ERROR
-        ================================================= */
-
-        onError(error){
-
-            console.error(
-                "PayPal error:",
-                error
-            );
-
-            showStatus(
-                "PayPal could not complete the checkout. Please try again.",
-                "error"
-            );
+        =============================================== */
+        onError: function(error) {
+            console.error("PayPal Error:", error);
+            showStatus("PayPal checkout could not be completed. Please try again.");
         }
 
-    }).render(
-        "#paypal-button-container"
+    }).render("#paypal-button-container");
+}
+
+/* =========================================================
+   COMING SOON
+========================================================= */
+
+function comingSoon() {
+
+    alert(
+        "This course is coming soon."
     );
+
 }
 
 
 /* =========================================================
-   FILTERS
+   FILTER SYSTEM
 ========================================================= */
 
 const filters =
-    document.querySelectorAll(".filter");
+    document.querySelectorAll(
+        ".filter"
+    );
 
 const cards =
-    document.querySelectorAll(".course-card");
+    document.querySelectorAll(
+        ".course-card"
+    );
 
 
 filters.forEach(
-    function(filter){
+    function(filter) {
 
         filter.addEventListener(
             "click",
-            function(){
+            function() {
 
                 filters.forEach(
-                    f => f.classList.remove("active")
+                    function(item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
                 );
 
-                filter.classList.add("active");
+
+                filter.classList.add(
+                    "active"
+                );
 
 
                 const selected =
@@ -1747,24 +2112,42 @@ filters.forEach(
 
 
                 cards.forEach(
-                    function(card){
+                    function(card) {
 
-                        const category =
-                            card.dataset.category;
-
-
-                        if(
-                            selected === "all" ||
-                            category === selected
-                        ){
+                        if (
+                            selected ===
+                            "all"
+                        ) {
 
                             card.style.display =
-                                "";
+                                "flex";
 
-                        }else{
+                            return;
+
+                        }
+
+
+                        const categories =
+                            card.dataset.category
+                                .split(" ");
+
+
+                        if (
+                            categories.includes(
+                                selected
+                            )
+                        ) {
+
+                            card.style.display =
+                                "flex";
+
+                        }
+
+                        else {
 
                             card.style.display =
                                 "none";
+
                         }
 
                     }
@@ -1778,29 +2161,21 @@ filters.forEach(
 
 
 /* =========================================================
-   ESCAPE KEY
+   ESC KEY
 ========================================================= */
 
 document.addEventListener(
     "keydown",
-    function(event){
+    function(event) {
 
-        if(event.key === "Escape"){
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
             closeCheckout();
+
         }
-
-    }
-);
-
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
-
-supabaseClient.auth.onAuthStateChange(
-    function(){
-
-        updateCourseButton();
 
     }
 );
@@ -1810,9 +2185,10 @@ supabaseClient.auth.onAuthStateChange(
    INITIALIZE
 ========================================================= */
 
-updateCourseButton();
+checkUnlocked();
 
 </script>
+
 
 </body>
 </html>
