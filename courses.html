@@ -7,8 +7,6 @@
 
 <title>Courses — ACADEMY.</title>
 
-<!-- PAYPAL LIVE -->
-<script src="https://www.paypal.com/sdk/js?client-id=BAAMT2HITp5Tx-SiZaFN5pbioLGdW4IFKI-o9UWTGponwofVYjaPHmXOtiERqGbc582-x0UUfsb68cUhik&currency=USD&intent=capture&components=buttons"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -851,1204 +849,135 @@ body::after {
 
 
 /* =========================================================
-   PAYPAL
+   PAYPAL — MOBILE-SAFE REDIRECT CHECKOUT
 ========================================================= */
 
-#paypal-button-container {
-    margin-top: 15px;
+async function startPayPalCheckout() {
+    if (!validateStudent()) return;
 
-    width: 100%;
-}
-
-#paypal-button-container:empty {
-    min-height: 0;
-}
-
-.secure {
-    margin-top: 18px;
-
-    text-align: center;
-
-    color: #555;
-
-    font-family: monospace;
-
-    font-size: 8px;
-
-    letter-spacing: 1px;
-}
-
-.demo-note {
-    margin-top: 20px;
-
-    padding: 12px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    color: #555;
-
-    font-size: 9px;
-
-    line-height: 1.5;
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.payment-status {
-    display: none;
-
-    margin-top: 15px;
-
-    padding: 14px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.12);
-
-    color: #aaa;
-
-    font-size: 11px;
-
-    line-height: 1.5;
-}
-
-.payment-status.show {
-    display: block;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-footer {
-    padding:
-        35px 7vw;
-
-    border-top:
-        1px solid
-        rgba(255,255,255,.1);
-
-    display: flex;
-
-    justify-content: space-between;
-
-    color: #555;
-
-    font-family: monospace;
-
-    font-size: 10px;
-}
-
-.footer-links {
-    display: flex;
-
-    gap: 25px;
-}
-
-.footer-links a:hover {
-    color: white;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width: 800px) {
-
-    .navbar {
-        height: 70px;
-
-        padding: 0 6vw;
+    const button = document.getElementById("paypalRedirectButton");
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = "<span>OPENING PAYPAL...</span><span class=\"paypal-arrow\">→</span>";
     }
 
-    .nav-links {
-        display: none;
-    }
-
-    .login {
-        display: none;
-    }
-
-    .hero {
-        padding:
-            135px 6vw
-            90px;
-    }
-
-    .hero h1 {
-        font-size: 72px;
-
-        letter-spacing: -5px;
-    }
-
-    .library {
-        padding:
-            100px 6vw
-            120px;
-    }
-
-    .library-header {
-        display: block;
-    }
-
-    .library-header p {
-        margin-top: 20px;
-    }
-
-    .course-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .course-card {
-        min-height: 440px;
-    }
-
-    .course-bottom {
-        display: block;
-    }
-
-    .course-meta {
-        margin-bottom: 22px;
-    }
-
-    .checkout {
-        grid-template-columns: 1fr;
-
-        max-height: 92vh;
-    }
-
-    .checkout-info {
-        border-right: none;
-
-        border-bottom:
-            1px solid
-            rgba(255,255,255,.08);
-
-        padding: 35px;
-    }
-
-    .checkout-form {
-        padding: 35px;
-    }
-
-    .checkout-info h2 {
-        font-size: 40px;
-    }
-
-    footer {
-        flex-direction: column;
-
-        gap: 20px;
-
-        padding:
-            30px 6vw;
-    }
-
-}
-
-@media(max-width: 430px) {
-
-    .hero h1 {
-        font-size: 63px;
-    }
-
-    .course-card {
-        padding: 25px;
-    }
-
-    .course-title {
-        font-size: 42px;
-    }
-
-    .course-meta {
-        display: grid;
-
-        grid-template-columns:
-            repeat(2,1fr);
-
-        gap: 15px;
-    }
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<!-- =======================================================
-     NAVBAR
-======================================================= -->
-
-<nav class="navbar">
-
-    <a href="index.html" class="logo">
-        ACADEMY<span>.</span>
-    </a>
-
-    <div class="nav-links">
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="courses.html">
-            Courses
-        </a>
-
-        <a href="pricing.html">
-            Pricing
-        </a>
-
-        <a href="about.html">
-            About
-        </a>
-
-    </div>
-
-    <div class="nav-actions">
-
-        <a href="login.html" class="login">
-            Login
-        </a>
-
-        <a href="dashboard.html" class="nav-btn">
-            DASHBOARD
-        </a>
-
-    </div>
-
-</nav>
-
-
-<!-- =======================================================
-     HERO
-======================================================= -->
-
-<section class="hero">
-
-    <div class="hero-grid"></div>
-
-    <div class="hero-content">
-
-        <div class="eyebrow">
-            ACADEMY. · COURSE LIBRARY
-        </div>
-
-        <h1>
-            Learn.<br>
-            <span>Build.</span><br>
-            Repeat.
-        </h1>
-
-        <p>
-            Practical courses designed around real skills,
-            real projects and real outcomes. Choose your
-            next skill and start building.
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- =======================================================
-     FILTERS
-======================================================= -->
-
-<div class="filters">
-
-    <button class="filter active" data-filter="all">
-        ALL
-    </button>
-
-    <button class="filter" data-filter="business">
-        BUSINESS
-    </button>
-
-    <button class="filter" data-filter="ai">
-        AI
-    </button>
-
-    <button class="filter" data-filter="design">
-        DESIGN
-    </button>
-
-    <button class="filter" data-filter="coming">
-        COMING SOON
-    </button>
-
-</div>
-
-
-<!-- =======================================================
-     LIBRARY
-======================================================= -->
-
-<section class="library">
-
-    <div class="library-header">
-
-        <div>
-
-            <div class="section-label">
-                / COURSE LIBRARY
-            </div>
-
-            <h2>
-                Choose<br>
-                your path.
-            </h2>
-
-        </div>
-
-        <p>
-            Start with one course and build
-            your knowledge step by step.
-        </p>
-
-    </div>
-
-
-    <div class="course-grid">
-
-
-        <!-- =================================================
-             AGENCY BLUEPRINT
-        ================================================== -->
-
-        <article
-            class="course-card"
-            data-category="business"
-        >
-
-            <div class="course-top">
-
-                <span class="course-number">
-                    COURSE · 001
-                </span>
-
-                <span
-                    class="locked-badge"
-                    id="agencyBadge"
-                >
-                    🔒 LOCKED
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <h3 class="course-title">
-
-                    AGENCY<br>
-                    <span>BLUEPRINT</span>
-
-                </h3>
-
-
-                <p class="course-description">
-
-                    Build a digital agency from zero.
-                    Learn positioning, offers, pricing,
-                    outreach, sales, delivery, AI,
-                    automation and scaling.
-
-                </p>
-
-            </div>
-
-
-            <div class="course-bottom">
-
-                <div class="course-meta">
-
-                    <div class="meta">
-
-                        <small>
-                            LESSONS
-                        </small>
-
-                        <strong>
-                            25
-                        </strong>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <small>
-                            LEVEL
-                        </small>
-
-                        <strong>
-                            ALL LEVELS
-                        </strong>
-
-                    </div>
-
-
-                    <div class="meta">
-
-                        <small>
-                            PRICE
-                        </small>
-
-                        <strong>
-                            $29
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="course-action"
-                    id="agencyAction"
-                    onclick="openCheckout()"
-                >
-                    UNLOCK COURSE →
-                </button>
-
-            </div>
-
-        </article>
-
-
-        <!-- =================================================
-             AI MASTERY
-        ================================================== -->
-
-        <article
-            class="course-card coming"
-            data-category="ai coming"
-        >
-
-            <div class="course-top">
-
-                <span class="course-number">
-                    COURSE · 002
-                </span>
-
-                <span class="locked-badge">
-                    COMING SOON
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <h3 class="course-title">
-
-                    AI<br>
-                    <span>MASTERY</span>
-
-                </h3>
-
-
-                <p class="course-description">
-
-                    Learn how to use modern AI tools
-                    for productivity, content, research,
-                    automation and creative work.
-
-                </p>
-
-            </div>
-
-
-            <div class="course-bottom">
-
-                <div class="course-meta">
-
-                    <div class="meta">
-
-                        <small>
-                            STATUS
-                        </small>
-
-                        <strong>
-                            SOON
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="course-action"
-                    onclick="comingSoon()"
-                >
-                    COMING SOON
-                </button>
-
-            </div>
-
-        </article>
-
-
-        <!-- =================================================
-             WEB DESIGN PRO
-        ================================================== -->
-
-        <article
-            class="course-card coming"
-            data-category="design coming"
-        >
-
-            <div class="course-top">
-
-                <span class="course-number">
-                    COURSE · 003
-                </span>
-
-                <span class="locked-badge">
-                    COMING SOON
-                </span>
-
-            </div>
-
-
-            <div>
-
-                <h3 class="course-title">
-
-                    WEB DESIGN<br>
-                    <span>PRO</span>
-
-                </h3>
-
-
-                <p class="course-description">
-
-                    Learn modern web design,
-                    frontend development, visual systems,
-                    animations and creative direction.
-
-                </p>
-
-            </div>
-
-
-            <div class="course-bottom">
-
-                <div class="course-meta">
-
-                    <div class="course-meta">
-
-                        <div class="meta">
-
-                            <small>
-                                STATUS
-                            </small>
-
-                            <strong>
-                                SOON
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="course-action"
-                    onclick="comingSoon()"
-                >
-                    COMING SOON
-                </button>
-
-            </div>
-
-        </article>
-
-
-    </div>
-
-</section>
-
-
-<!-- =======================================================
-     CHECKOUT OVERLAY
-======================================================= -->
-
-<div
-    class="checkout-overlay"
-    id="checkoutOverlay"
-    onclick="closeOutside(event)"
->
-
-    <div class="checkout">
-
-
-        <button
-            class="close"
-            onclick="closeCheckout()"
-        >
-            ×
-        </button>
-
-
-        <!-- LEFT -->
-
-        <div class="checkout-info">
-
-            <div class="checkout-tag">
-                ACADEMY. · CHECKOUT
-            </div>
-
-
-            <h2>
-
-                AGENCY<br>
-                <span>BLUEPRINT</span>
-
-            </h2>
-
-
-            <p>
-
-                Get full access to the complete
-                25-lesson Agency Blueprint course
-                and learn how to build a modern
-                digital agency from zero.
-
-            </p>
-
-
-            <div class="includes">
-
-                <div class="includes-title">
-                    YOUR ACCESS INCLUDES
-                </div>
-
-                <div>
-                    ✓ 25 structured lessons
-                </div>
-
-                <div>
-                    ✓ Agency business model
-                </div>
-
-                <div>
-                    ✓ Offer & pricing systems
-                </div>
-
-                <div>
-                    ✓ Client acquisition
-                </div>
-
-                <div>
-                    ✓ Sales & closing
-                </div>
-
-                <div>
-                    ✓ AI & automation
-                </div>
-
-                <div>
-                    ✓ Scaling systems
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- RIGHT -->
-
-        <div class="checkout-form">
-
-            <div class="price">
-
-                <small>
-                    ONE-TIME ACCESS
-                </small>
-
-                <strong>
-                    $29
-                </strong>
-
-                <span>
-                    USD
-                </span>
-
-            </div>
-
-
-            <div class="form-title">
-                Create your student access
-            </div>
-
-
-            <input
-                class="input"
-                id="checkoutName"
-                type="text"
-                placeholder="Full name"
-                autocomplete="name"
-            >
-
-
-            <input
-                class="input"
-                id="checkoutEmail"
-                type="email"
-                placeholder="Email address"
-                autocomplete="email"
-            >
-
-
-            <!-- PAYPAL BUTTONS -->
-
-            <div id="paypal-button-container"></div>
-
-
-            <div
-                class="payment-status"
-                id="paymentStatus"
-            ></div>
-
-
-            <div class="secure">
-                🔒 PAYPAL SECURE CHECKOUT · ACADEMY.
-            </div>
-
-
-            <div class="demo-note">
-                🔒 LIVE SECURE CHECKOUT · Payment is processed securely by PayPal.
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =======================================================
-     FOOTER
-======================================================= -->
-
-<footer>
-
-    <div>
-        © 2026 ACADEMY.
-    </div>
-
-
-    <div class="footer-links">
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="pricing.html">
-            Pricing
-        </a>
-
-        <a href="about.html">
-            About
-        </a>
-
-        <a href="login.html">
-            Login
-        </a>
-
-    </div>
-
-</footer>
-
-
-<!-- =======================================================
-     JAVASCRIPT
-======================================================= -->
-
-<script>
-
-
-/* =========================================================
-   CONFIG
-========================================================= */
-
-const COURSE_PRICE = "29.00";
-
-const COURSE_NAME =
-    "ACADEMY. — Agency Blueprint";
-
-const SUPABASE_URL = "https://jbhpkkwpdsyjbgizqtqf.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_odgH5ZbkfIhTPSfJO6ubcA_RAXUWYIA";
-const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
-
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const checkoutOverlay =
-    document.getElementById(
-        "checkoutOverlay"
-    );
-
-const paypalContainer =
-    document.getElementById(
-        "paypal-button-container"
-    );
-
-const paymentStatus =
-    document.getElementById(
-        "paymentStatus"
-    );
-
-const nameInput =
-    document.getElementById(
-        "checkoutName"
-    );
-
-const emailInput =
-    document.getElementById(
-        "checkoutEmail"
-    );
-
-
-/* =========================================================
-   CHECK IF ALREADY UNLOCKED
-========================================================= */
-
-async function checkUnlocked() {
     try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (!session) return;
-
-        const { data: course } = await supabaseClient
-            .from("courses")
-            .select("id")
-            .eq("slug", "agency-blueprint")
-            .single();
-
-        if (!course) return;
-
-        const { data: purchase } = await supabaseClient
-            .from("purchases")
-            .select("id")
-            .eq("user_id", session.user.id)
-            .eq("course_id", course.id)
-            .eq("status", "completed")
-            .maybeSingle();
-
-        if (purchase) {
-            const badge = document.getElementById("agencyBadge");
-            const action = document.getElementById("agencyAction");
-
-            if (badge) {
-                badge.innerHTML = "✓ UNLOCKED";
-                badge.classList.add("open-badge");
-            }
-
-            if (action) {
-                action.innerHTML = "OPEN COURSE →";
-                action.onclick = function() {
-                    window.location.href = "lesson.html";
-                };
-            }
-        }
-    }
-    catch (error) {
-        console.error("Unlock check error:", error);
-    }
-}
-
-
-/* =========================================================
-   OPEN CHECKOUT
-========================================================= */
-
-async function openCheckout() {
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
+        const { data: { session } } =
+            await supabaseClient.auth.getSession();
 
         if (!session) {
             window.location.href = "login.html";
             return;
         }
 
-        checkoutOverlay.classList.add("show");
-        document.body.style.overflow = "hidden";
-        paymentStatus.classList.remove("show");
+        showStatus("Preparing secure PayPal checkout...");
 
-        if (paypalContainer.children.length === 0) {
-            renderPayPal();
+        const response = await fetch("/api/create-order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + session.access_token
+            }
+        });
+
+        const data = await response.json().catch(function() {
+            return {};
+        });
+
+        if (!response.ok || !data.orderID || !data.approvalUrl) {
+            console.error("Create order error:", data);
+            throw new Error(
+                data.error || "Could not open PayPal checkout."
+            );
         }
+
+        // Full-page redirect instead of the PayPal popup/new-tab flow.
+        // This is much more reliable on iPhone/mobile browsers.
+        window.location.assign(data.approvalUrl);
     }
     catch (error) {
-        console.error(error);
-        window.location.href = "login.html";
-    }
-}
-
-
-/* =========================================================
-   CLOSE CHECKOUT
-========================================================= */
-
-function closeCheckout() {
-
-    checkoutOverlay.classList.remove(
-        "show"
-    );
-
-    document.body.style.overflow =
-        "";
-
-}
-
-
-/* =========================================================
-   CLOSE OUTSIDE
-========================================================= */
-
-function closeOutside(event) {
-
-    if (
-        event.target ===
-        checkoutOverlay
-    ) {
-
-        closeCheckout();
-
-    }
-
-}
-
-
-/* =========================================================
-   SHOW STATUS
-========================================================= */
-
-function showStatus(message) {
-
-    paymentStatus.innerText =
-        message;
-
-    paymentStatus.classList.add(
-        "show"
-    );
-
-}
-
-
-/* =========================================================
-   VALIDATE STUDENT
-========================================================= */
-
-function validateStudent() {
-
-    const name =
-        nameInput.value.trim();
-
-    const email =
-        emailInput.value.trim();
-
-
-    if (!name) {
-
-        alert(
-            "Please enter your full name first."
+        console.error("PayPal redirect error:", error);
+        showStatus(
+            error.message ||
+            "PayPal could not open. Please try again."
         );
 
-        nameInput.focus();
-
-        return false;
-
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = "<span>PAY WITH PAYPAL</span><span class=\"paypal-arrow\">→</span>";
+        }
     }
-
-
-    if (
-        !email ||
-        !email.includes("@") ||
-        !email.includes(".")
-    ) {
-
-        alert(
-            "Please enter a valid email address."
-        );
-
-        emailInput.focus();
-
-        return false;
-
-    }
-
-
-    return true;
-
 }
 
+async function finishPayPalReturn() {
+    const params = new URLSearchParams(window.location.search);
+    const paypalState = params.get("paypal");
+    const orderID = params.get("token");
 
-/* =========================================================
-   PAYPAL
-========================================================= */
-
-function renderPayPal() {
-
-    if (typeof paypal === "undefined") {
-        showStatus("PayPal could not load. Please refresh the page and try again.");
+    if (paypalState === "cancel") {
+        showStatus("Payment cancelled. You can try again whenever you're ready.");
+        history.replaceState({}, document.title, "courses.html");
         return;
     }
 
-    if (typeof supabase === "undefined") {
-        showStatus("Secure checkout could not load. Please refresh the page.");
+    if (paypalState !== "return" || !orderID) {
         return;
     }
 
-    paypal.Buttons({
+    try {
+        checkoutOverlay.classList.add("show");
+        document.body.style.overflow = "hidden";
+        showStatus("Payment approved. Securely completing your purchase...");
 
-        style: {
-            layout: "vertical",
-            color: "gold",
-            shape: "rect",
-            label: "paypal",
-            height: 48
-        },
+        const { data: { session } } =
+            await supabaseClient.auth.getSession();
 
-        /* ===============================================
-           CREATE ORDER — SERVER SIDE
-        =============================================== */
-        createOrder: async function() {
-            try {
-                const { data: { session } } =
-                    await supabaseClient.auth.getSession();
-
-                if (!session) {
-                    showStatus("Please log in before purchasing this course.");
-                    setTimeout(function() {
-                        window.location.href = "login.html";
-                    }, 900);
-                    throw new Error("LOGIN_REQUIRED");
-                }
-
-                const response = await fetch("/api/create-order", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + session.access_token
-                    }
-                });
-
-                const data = await response.json().catch(function() {
-                    return {};
-                });
-
-                if (!response.ok || !data.orderID) {
-                    console.error("Create order error:", data);
-                    throw new Error(
-                        data.error || "Could not create PayPal order."
-                    );
-                }
-
-                return data.orderID;
-            }
-            catch (error) {
-                console.error("PayPal createOrder error:", error);
-
-                if (error.message !== "LOGIN_REQUIRED") {
-                    showStatus(
-                        error.message ||
-                        "PayPal could not create the checkout. Please try again."
-                    );
-                }
-
-                throw error;
-            }
-        },
-
-        /* ===============================================
-           PAYMENT APPROVED — SERVER SIDE CAPTURE
-        =============================================== */
-        onApprove: async function(data) {
-            try {
-                showStatus("Payment approved. Securely completing your purchase...");
-
-                const { data: { session } } =
-                    await supabaseClient.auth.getSession();
-
-                if (!session) {
-                    throw new Error("Your login session expired. Please log in again.");
-                }
-
-                const response = await fetch("/api/capture-order", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + session.access_token
-                    },
-                    body: JSON.stringify({
-                        orderID: data.orderID
-                    })
-                });
-
-                const result = await response.json().catch(function() {
-                    return {};
-                });
-
-                if (!response.ok || !result.success) {
-                    console.error("Capture order error:", result);
-                    throw new Error(
-                        result.error || "Payment could not be completed."
-                    );
-                }
-
-                showStatus("Payment successful! Your course is unlocked. Opening...");
-
-                setTimeout(function() {
-                    window.location.href = "lesson.html";
-                }, 900);
-            }
-            catch (error) {
-                console.error("PayPal capture error:", error);
-                showStatus(
-                    error.message ||
-                    "Payment could not be completed. Please try again."
-                );
-            }
-        },
-
-        /* ===============================================
-           CANCEL
-        =============================================== */
-        onCancel: function() {
-            showStatus("Payment cancelled.");
-        },
-
-        /* ===============================================
-           ERROR
-        =============================================== */
-        onError: function(error) {
-            console.error("PayPal Error:", error);
-            showStatus("PayPal checkout could not be completed. Please try again.");
+        if (!session) {
+            showStatus("Your login session expired. Please log in again.");
+            setTimeout(function() {
+                window.location.href = "login.html";
+            }, 1200);
+            return;
         }
 
-    }).render("#paypal-button-container");
+        const response = await fetch("/api/capture-order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + session.access_token
+            },
+            body: JSON.stringify({
+                orderID: orderID
+            })
+        });
+
+        const result = await response.json().catch(function() {
+            return {};
+        });
+
+        if (!response.ok || !result.success) {
+            console.error("Capture order error:", result);
+            throw new Error(
+                result.error || "Payment could not be completed."
+            );
+        }
+
+        showStatus("Payment successful! Your course is unlocked. Opening...");
+
+        // Clean the PayPal query from the address bar before leaving.
+        history.replaceState({}, document.title, "courses.html");
+
+        setTimeout(function() {
+            window.location.replace("lesson.html");
+        }, 700);
+    }
+    catch (error) {
+        console.error("PayPal return error:", error);
+        showStatus(
+            error.message ||
+            "Payment could not be completed. Please contact support if you were charged."
+        );
+    }
 }
 
 /* =========================================================
