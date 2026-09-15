@@ -6,10 +6,11 @@
 
 <title>Courses — ACADEMY.</title>
 
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- LIVE PAYPAL -->
-<script src="https://www.paypal.com/sdk/js?client-id=YOUR_LIVE_PAYPAL_CLIENT_ID&currency=USD&intent=capture"></script>
+<!-- PAYPAL LIVE -->
+<script src="https://www.paypal.com/sdk/js?client-id=BAAMT2HITp5Tx-SiZaFN5pbioLGdW4IFKI-o9UWTGponwofVYjaPHmXOtiERqGbc582-x0UUfsb68cUhik&currency=USD&intent=capture"></script>
 
 <style>
 *{
@@ -248,13 +249,15 @@ body::after{
     line-height:1.7;
 }
 
-/* CARDS */
+/* GRID */
 
 .course-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:18px;
 }
+
+/* CARD */
 
 .course-card{
     min-height:430px;
@@ -265,8 +268,14 @@ body::after{
     justify-content:space-between;
     overflow:hidden;
     border:1px solid rgba(255,255,255,.1);
-    background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
-    transition:transform .4s ease,border-color .4s ease;
+    background:linear-gradient(
+        135deg,
+        rgba(255,255,255,.05),
+        rgba(255,255,255,.012)
+    );
+    transition:
+        transform .4s ease,
+        border-color .4s ease;
 }
 
 .course-card:hover{
@@ -282,7 +291,11 @@ body::after{
     right:-180px;
     top:-180px;
     border-radius:50%;
-    background:radial-gradient(circle,rgba(255,255,255,.08),transparent 65%);
+    background:radial-gradient(
+        circle,
+        rgba(255,255,255,.08),
+        transparent 65%
+    );
 }
 
 .course-card>*{
@@ -309,11 +322,6 @@ body::after{
     color:#888;
     font-size:9px;
     letter-spacing:1px;
-}
-
-.open-badge{
-    color:#ddd;
-    border-color:rgba(255,255,255,.3);
 }
 
 .course-title{
@@ -447,6 +455,8 @@ body::after{
     color:white;
 }
 
+/* CHECKOUT LEFT */
+
 .checkout-info{
     padding:50px;
     border-right:1px solid rgba(255,255,255,.08);
@@ -494,6 +504,8 @@ body::after{
     border-bottom:1px solid rgba(255,255,255,.06);
 }
 
+/* CHECKOUT RIGHT */
+
 .checkout-form{
     padding:50px;
 }
@@ -535,11 +547,27 @@ body::after{
     background:#111;
     color:white;
     font-size:12px;
+    transition:.3s ease;
 }
+
+.input:focus{
+    border-color:rgba(255,255,255,.4);
+}
+
+/* PAYPAL */
 
 #paypal-button-container{
     margin-top:15px;
     width:100%;
+}
+
+.paypal-loading{
+    padding:16px;
+    border:1px solid rgba(255,255,255,.1);
+    color:#666;
+    text-align:center;
+    font-family:monospace;
+    font-size:9px;
 }
 
 .secure{
@@ -565,9 +593,14 @@ body::after{
     display:block;
 }
 
-.processing{
-    pointer-events:none;
-    opacity:.55;
+.payment-status.success{
+    border-color:rgba(255,255,255,.35);
+    color:white;
+}
+
+.payment-status.error{
+    border-color:rgba(255,80,80,.35);
+    color:#ff9a9a;
 }
 
 /* FOOTER */
@@ -626,7 +659,7 @@ footer{
     }
 
     .library-header p{
-        margin-top:20px;
+        margin-top:25px;
     }
 
     .course-grid{
@@ -634,15 +667,7 @@ footer{
     }
 
     .course-card{
-        min-height:440px;
-    }
-
-    .course-bottom{
-        display:block;
-    }
-
-    .course-meta{
-        margin-bottom:22px;
+        min-height:420px;
     }
 
     .checkout{
@@ -651,9 +676,9 @@ footer{
     }
 
     .checkout-info{
+        padding:35px;
         border-right:none;
         border-bottom:1px solid rgba(255,255,255,.08);
-        padding:35px;
     }
 
     .checkout-form{
@@ -661,34 +686,12 @@ footer{
     }
 
     .checkout-info h2{
-        font-size:40px;
+        font-size:42px;
     }
 
     footer{
         flex-direction:column;
         gap:20px;
-        padding:30px 6vw;
-    }
-}
-
-@media(max-width:430px){
-
-    .hero h1{
-        font-size:63px;
-    }
-
-    .course-card{
-        padding:25px;
-    }
-
-    .course-title{
-        font-size:42px;
-    }
-
-    .course-meta{
-        display:grid;
-        grid-template-columns:repeat(2,1fr);
-        gap:15px;
     }
 }
 </style>
@@ -705,22 +708,15 @@ footer{
     </a>
 
     <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="courses.html">Courses</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="about.html">About</a>
+        <a href="index.html">HOME</a>
+        <a href="courses.html">COURSES</a>
+        <a href="pricing.html">PRICING</a>
+        <a href="about.html">ABOUT</a>
     </div>
 
     <div class="nav-actions">
-
-        <a href="login.html" class="login">
-            Login
-        </a>
-
-        <a href="dashboard.html" class="nav-btn">
-            DASHBOARD
-        </a>
-
+        <a href="login.html" class="login">LOGIN</a>
+        <a href="dashboard.html" class="nav-btn">DASHBOARD</a>
     </div>
 
 </nav>
@@ -735,7 +731,7 @@ footer{
     <div class="hero-content">
 
         <div class="eyebrow">
-            ACADEMY. · COURSE LIBRARY
+            ACADEMY · KNOWLEDGE / SKILLS / EXECUTION
         </div>
 
         <h1>
@@ -745,9 +741,9 @@ footer{
         </h1>
 
         <p>
-            Practical courses designed around real skills,
-            real projects and real outcomes. Choose your
-            next skill and start building.
+            Practical courses designed to help you build real skills,
+            launch real projects, and turn knowledge into something
+            you can actually use.
         </p>
 
     </div>
@@ -760,7 +756,7 @@ footer{
 <div class="filters">
 
     <button class="filter active" data-filter="all">
-        ALL
+        ALL COURSES
     </button>
 
     <button class="filter" data-filter="business">
@@ -775,35 +771,31 @@ footer{
         DESIGN
     </button>
 
-    <button class="filter" data-filter="coming">
-        COMING SOON
+    <button class="filter" data-filter="development">
+        DEVELOPMENT
     </button>
 
 </div>
 
 
-<!-- LIBRARY -->
+<!-- COURSE LIBRARY -->
 
 <section class="library">
 
+    <div class="section-label">
+        001 — COURSE LIBRARY
+    </div>
+
     <div class="library-header">
 
-        <div>
-
-            <div class="section-label">
-                / COURSE LIBRARY
-            </div>
-
-            <h2>
-                Choose<br>
-                your path.
-            </h2>
-
-        </div>
+        <h2>
+            Choose<br>
+            Your Path.
+        </h2>
 
         <p>
-            Start with one course and build
-            your knowledge step by step.
+            One skill at a time. Every course is built around
+            practical knowledge, real projects, and execution.
         </p>
 
     </div>
@@ -814,23 +806,17 @@ footer{
 
         <!-- COURSE 001 -->
 
-        <article
-            class="course-card"
-            data-category="business"
-        >
+        <article class="course-card" data-category="business">
 
             <div class="course-top">
 
-                <span class="course-number">
-                    COURSE · 001
-                </span>
+                <div class="course-number">
+                    COURSE / 001
+                </div>
 
-                <span
-                    class="locked-badge"
-                    id="agencyBadge"
-                >
-                    🔒 LOCKED
-                </span>
+                <div class="locked-badge" id="agencyBadge">
+                    LOCKED
+                </div>
 
             </div>
 
@@ -845,8 +831,8 @@ footer{
                 <p class="course-description">
                     Build a digital agency from zero.
                     Learn positioning, offers, pricing,
-                    outreach, sales, delivery, AI,
-                    automation and scaling.
+                    outreach, sales, delivery, systems,
+                    AI, hiring and scaling.
                 </p>
 
             </div>
@@ -863,7 +849,7 @@ footer{
 
                     <div class="meta">
                         <small>LEVEL</small>
-                        <strong>ALL LEVELS</strong>
+                        <strong>ALL</strong>
                     </div>
 
                     <div class="meta">
@@ -872,7 +858,6 @@ footer{
                     </div>
 
                 </div>
-
 
                 <button
                     class="course-action"
@@ -889,23 +874,19 @@ footer{
 
         <!-- COURSE 002 -->
 
-        <article
-            class="course-card coming"
-            data-category="ai coming"
-        >
+        <article class="course-card coming" data-category="ai">
 
             <div class="course-top">
 
-                <span class="course-number">
-                    COURSE · 002
-                </span>
+                <div class="course-number">
+                    COURSE / 002
+                </div>
 
-                <span class="locked-badge">
+                <div class="locked-badge">
                     COMING SOON
-                </span>
+                </div>
 
             </div>
-
 
             <div>
 
@@ -916,12 +897,12 @@ footer{
 
                 <p class="course-description">
                     Learn how to use modern AI tools
-                    for productivity, content, research,
-                    automation and creative work.
+                    to think faster, create better,
+                    automate workflows and build
+                    powerful systems.
                 </p>
 
             </div>
-
 
             <div class="course-bottom">
 
@@ -932,12 +913,14 @@ footer{
                         <strong>SOON</strong>
                     </div>
 
+                    <div class="meta">
+                        <small>LEVEL</small>
+                        <strong>ALL</strong>
+                    </div>
+
                 </div>
 
-                <button
-                    class="course-action"
-                    onclick="comingSoon()"
-                >
+                <button class="course-action">
                     COMING SOON
                 </button>
 
@@ -948,39 +931,34 @@ footer{
 
         <!-- COURSE 003 -->
 
-        <article
-            class="course-card coming"
-            data-category="design coming"
-        >
+        <article class="course-card coming" data-category="design">
 
             <div class="course-top">
 
-                <span class="course-number">
-                    COURSE · 003
-                </span>
+                <div class="course-number">
+                    COURSE / 003
+                </div>
 
-                <span class="locked-badge">
+                <div class="locked-badge">
                     COMING SOON
-                </span>
+                </div>
 
             </div>
-
 
             <div>
 
                 <h3 class="course-title">
-                    WEB DESIGN<br>
-                    <span>PRO</span>
+                    WEB<br>
+                    <span>DESIGN PRO</span>
                 </h3>
 
                 <p class="course-description">
-                    Learn modern web design,
-                    frontend development, visual systems,
-                    animations and creative direction.
+                    Learn how to design premium,
+                    modern websites and turn ideas
+                    into professional digital experiences.
                 </p>
 
             </div>
-
 
             <div class="course-bottom">
 
@@ -991,18 +969,21 @@ footer{
                         <strong>SOON</strong>
                     </div>
 
+                    <div class="meta">
+                        <small>LEVEL</small>
+                        <strong>ALL</strong>
+                    </div>
+
                 </div>
 
-                <button
-                    class="course-action"
-                    onclick="comingSoon()"
-                >
+                <button class="course-action">
                     COMING SOON
                 </button>
 
             </div>
 
         </article>
+
 
     </div>
 
@@ -1011,27 +992,21 @@ footer{
 
 <!-- CHECKOUT -->
 
-<div
-    class="checkout-overlay"
-    id="checkoutOverlay"
-    onclick="closeOutside(event)"
->
+<div class="checkout-overlay" id="checkoutOverlay">
 
     <div class="checkout">
 
-        <button
-            class="close"
-            onclick="closeCheckout()"
-            aria-label="Close checkout"
-        >
+        <button class="close" onclick="closeCheckout()">
             ×
         </button>
 
 
+        <!-- LEFT -->
+
         <div class="checkout-info">
 
             <div class="checkout-tag">
-                ACADEMY. · SECURE CHECKOUT
+                ACADEMY / COURSE 001
             </div>
 
             <h2>
@@ -1040,81 +1015,91 @@ footer{
             </h2>
 
             <p>
-                Get full access to the complete
-                25-lesson Agency Blueprint course
-                and learn how to build a modern
-                digital agency from zero.
+                Build a digital agency from zero.
+                A practical 25-lesson system covering
+                the complete agency journey.
             </p>
-
 
             <div class="includes">
 
                 <div class="includes-title">
-                    YOUR ACCESS INCLUDES
+                    WHAT YOU GET
                 </div>
 
-                <div>✓ 25 structured lessons</div>
-                <div>✓ Agency business model</div>
-                <div>✓ Offer & pricing systems</div>
-                <div>✓ Client acquisition</div>
-                <div>✓ Sales & closing</div>
-                <div>✓ AI & automation</div>
-                <div>✓ Scaling systems</div>
+                <div>01 — 25 practical lessons</div>
+                <div>02 — Agency positioning</div>
+                <div>03 — Offer & pricing systems</div>
+                <div>04 — Client acquisition</div>
+                <div>05 — Sales & closing</div>
+                <div>06 — Delivery systems</div>
+                <div>07 — AI & automation</div>
+                <div>08 — Hiring & scaling</div>
 
             </div>
 
         </div>
 
 
+        <!-- RIGHT -->
+
         <div class="checkout-form">
 
             <div class="price">
 
                 <small>
-                    ONE-TIME ACCESS
+                    ONE-TIME PAYMENT
                 </small>
 
-                <strong>$29</strong>
+                <strong>
+                    $29
+                </strong>
 
-                <span>USD</span>
+                <span>
+                    USD
+                </span>
 
             </div>
 
 
             <div class="form-title">
-                Student account
+                ACCOUNT
             </div>
 
 
             <input
-                class="input"
-                id="checkoutName"
                 type="text"
-                placeholder="Full name"
-                readonly
+                id="studentName"
+                class="input"
+                placeholder="Your full name"
+                autocomplete="name"
             >
-
 
             <input
-                class="input"
-                id="checkoutEmail"
                 type="email"
-                placeholder="Email address"
-                readonly
+                id="studentEmail"
+                class="input"
+                placeholder="Your account email"
+                autocomplete="email"
             >
-
-
-            <div id="paypal-button-container"></div>
 
 
             <div
-                class="payment-status"
+                id="paypal-button-container"
+            >
+                <div class="paypal-loading">
+                    LOADING SECURE CHECKOUT...
+                </div>
+            </div>
+
+
+            <div
                 id="paymentStatus"
+                class="payment-status"
             ></div>
 
 
             <div class="secure">
-                🔒 SECURE PAYPAL CHECKOUT · ACADEMY.
+                SECURE CHECKOUT · PAYPAL · ONE-TIME PAYMENT
             </div>
 
         </div>
@@ -1133,12 +1118,9 @@ footer{
     </div>
 
     <div class="footer-links">
-
-        <a href="index.html">Home</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="about.html">About</a>
-        <a href="login.html">Login</a>
-
+        <a href="about.html">ABOUT</a>
+        <a href="pricing.html">PRICING</a>
+        <a href="login.html">LOGIN</a>
     </div>
 
 </footer>
@@ -1174,120 +1156,70 @@ const COURSE_PRICE =
     "29.00";
 
 
-let currentUser = null;
-let currentSession = null;
-let paypalRendered = false;
-
-
 /* =========================================================
    ELEMENTS
 ========================================================= */
 
 const overlay =
-    document.getElementById(
-        "checkoutOverlay"
-    );
+    document.getElementById("checkoutOverlay");
 
 const paypalContainer =
-    document.getElementById(
-        "paypal-button-container"
-    );
+    document.getElementById("paypal-button-container");
 
-const paymentStatus =
-    document.getElementById(
-        "paymentStatus"
-    );
+const statusBox =
+    document.getElementById("paymentStatus");
 
 const nameInput =
-    document.getElementById(
-        "checkoutName"
-    );
+    document.getElementById("studentName");
 
 const emailInput =
-    document.getElementById(
-        "checkoutEmail"
-    );
-
-const agencyBadge =
-    document.getElementById(
-        "agencyBadge"
-    );
+    document.getElementById("studentEmail");
 
 const agencyAction =
-    document.getElementById(
-        "agencyAction"
-    );
+    document.getElementById("agencyAction");
+
+const agencyBadge =
+    document.getElementById("agencyBadge");
 
 
 /* =========================================================
-   SESSION
+   STATUS
 ========================================================= */
 
-async function loadSession(){
+function showStatus(message, type = ""){
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-            .auth
-            .getSession();
+    statusBox.textContent = message;
 
+    statusBox.className =
+        "payment-status show " + type;
+}
 
-    if(error){
+function clearStatus(){
 
-        console.error(
-            "Session error:",
-            error
-        );
+    statusBox.textContent = "";
 
-        return null;
-    }
-
-
-    currentSession =
-        data.session || null;
-
-    currentUser =
-        currentSession?.user || null;
-
-
-    return currentSession;
+    statusBox.className =
+        "payment-status";
 }
 
 
 /* =========================================================
-   COURSE ID
+   AUTH
 ========================================================= */
 
-async function getCourseId(){
+async function getCurrentUser(){
 
     const {
         data,
         error
     } =
-        await supabaseClient
-            .from("courses")
-            .select("id")
-            .eq(
-                "slug",
-                COURSE_SLUG
-            )
-            .single();
-
+        await supabaseClient.auth.getUser();
 
     if(error){
-
-        console.error(
-            "Course lookup error:",
-            error
-        );
-
         return null;
     }
 
-
-    return data.id;
+    return data.user;
 }
 
 
@@ -1297,28 +1229,12 @@ async function getCourseId(){
 
 async function checkOwnership(){
 
-    await loadSession();
+    const user =
+        await getCurrentUser();
 
-
-    if(!currentUser){
-
-        setLockedState();
-
+    if(!user){
         return false;
     }
-
-
-    const courseId =
-        await getCourseId();
-
-
-    if(!courseId){
-
-        setLockedState();
-
-        return false;
-    }
-
 
     const {
         data,
@@ -1326,93 +1242,62 @@ async function checkOwnership(){
     } =
         await supabaseClient
             .from("purchases")
-            .select("id,status")
-            .eq(
-                "user_id",
-                currentUser.id
-            )
-            .eq(
-                "course_id",
-                courseId
-            )
-            .eq(
-                "status",
-                "completed"
-            )
+            .select(`
+                id,
+                status,
+                course_id,
+                courses!inner(slug)
+            `)
+            .eq("user_id", user.id)
+            .eq("status", "completed")
+            .eq("courses.slug", COURSE_SLUG)
             .maybeSingle();
 
-
     if(error){
-
-        console.error(
-            "Ownership error:",
-            error
-        );
-
-        setLockedState();
-
+        console.log("Ownership check:", error);
         return false;
     }
 
+    return !!data;
+}
 
-    if(data){
 
-        setUnlockedState();
+/* =========================================================
+   UPDATE COURSE BUTTON
+========================================================= */
 
-        return true;
+async function updateCourseButton(){
+
+    const owned =
+        await checkOwnership();
+
+    if(owned){
+
+        agencyBadge.textContent =
+            "OWNED";
+
+        agencyAction.textContent =
+            "CONTINUE COURSE →";
+
+        agencyAction.onclick =
+            function(){
+                window.location.href =
+                    "lesson.html?course=agency-blueprint";
+            };
+
+    }else{
+
+        agencyBadge.textContent =
+            "LOCKED";
+
+        agencyAction.textContent =
+            "UNLOCK COURSE →";
+
+        agencyAction.onclick =
+            function(){
+                openCheckout();
+            };
     }
-
-
-    setLockedState();
-
-    return false;
-}
-
-
-/* =========================================================
-   LOCKED
-========================================================= */
-
-function setLockedState(){
-
-    agencyBadge.textContent =
-        "🔒 LOCKED";
-
-    agencyBadge.classList.remove(
-        "open-badge"
-    );
-
-    agencyAction.textContent =
-        "UNLOCK COURSE →";
-
-    agencyAction.onclick =
-        openCheckout;
-}
-
-
-/* =========================================================
-   UNLOCKED
-========================================================= */
-
-function setUnlockedState(){
-
-    agencyBadge.textContent =
-        "✓ UNLOCKED";
-
-    agencyBadge.classList.add(
-        "open-badge"
-    );
-
-    agencyAction.textContent =
-        "OPEN COURSE →";
-
-    agencyAction.onclick =
-        function(){
-
-            window.location.href =
-                "lesson.html";
-
-        };
 }
 
 
@@ -1422,175 +1307,301 @@ function setUnlockedState(){
 
 async function openCheckout(){
 
-    await loadSession();
+    clearStatus();
 
+    const user =
+        await getCurrentUser();
 
-    if(!currentUser){
+    if(!user){
 
         window.location.href =
-            "login.html";
+            "login.html?redirect=courses.html";
 
         return;
     }
+
+
+    nameInput.value =
+        user.user_metadata?.full_name || "";
+
+    emailInput.value =
+        user.email || "";
 
 
     const owned =
         await checkOwnership();
 
-
     if(owned){
 
         window.location.href =
-            "lesson.html";
+            "lesson.html?course=agency-blueprint";
 
         return;
     }
 
 
-    const fullName =
-        currentUser
-            .user_metadata
-            ?.full_name || "";
-
-
-    const email =
-        currentUser.email || "";
-
-
-    nameInput.value =
-        fullName;
-
-    emailInput.value =
-        email;
-
-
-    paymentStatus.classList.remove(
-        "show"
-    );
-
-
-    overlay.classList.add(
-        "show"
-    );
+    overlay.classList.add("show");
 
     document.body.style.overflow =
         "hidden";
 
 
-    if(!paypalRendered){
-
-        renderPayPal();
-
-    }
-
+    renderPayPal();
 }
 
 
 /* =========================================================
-   CLOSE
+   CLOSE CHECKOUT
 ========================================================= */
 
 function closeCheckout(){
 
-    overlay.classList.remove(
-        "show"
-    );
+    overlay.classList.remove("show");
 
     document.body.style.overflow =
         "";
 
-}
-
-
-function closeOutside(event){
-
-    if(
-        event.target ===
-        overlay
-    ){
-
-        closeCheckout();
-
-    }
-
+    clearStatus();
 }
 
 
 /* =========================================================
-   STATUS
+   CLOSE WHEN CLICKING BACKDROP
 ========================================================= */
 
-function showStatus(message){
+overlay.addEventListener(
+    "click",
+    function(event){
 
-    paymentStatus.textContent =
-        message;
+        if(event.target === overlay){
+            closeCheckout();
+        }
 
-    paymentStatus.classList.add(
-        "show"
-    );
-
-}
+    }
+);
 
 
 /* =========================================================
    PAYPAL
 ========================================================= */
 
+let paypalRendered = false;
+
 function renderPayPal(){
 
+    if(paypalRendered){
+        return;
+    }
+
     if(
-        typeof paypal ===
-        "undefined"
+        typeof paypal === "undefined" ||
+        !paypal.Buttons
     ){
 
-        showStatus(
-            "PayPal could not load. Please refresh the page and try again."
-        );
+        paypalContainer.innerHTML = "";
+
+        const error =
+            document.createElement("div");
+
+        error.className =
+            "paypal-loading";
+
+        error.textContent =
+            "PAYPAL CHECKOUT COULD NOT LOAD.";
+
+        paypalContainer.appendChild(error);
 
         return;
     }
+
+
+    paypalContainer.innerHTML = "";
+
+    paypalRendered = true;
 
 
     paypal.Buttons({
 
         style:{
             layout:"vertical",
-            color:"gold",
             shape:"rect",
             label:"paypal",
             height:48
         },
 
 
-        /* =============================================
-           CREATE REAL ORDER
-        ============================================= */
+        /* =================================================
+           CREATE ORDER
+        ================================================= */
 
-        createOrder:
-            async function(){
+        async createOrder(){
 
-                await loadSession();
+            clearStatus();
 
 
-                if(!currentSession){
+            const user =
+                await getCurrentUser();
 
-                    window.location.href =
-                        "login.html";
+            if(!user){
+
+                window.location.href =
+                    "login.html?redirect=courses.html";
+
+                throw new Error(
+                    "Please log in first."
+                );
+            }
+
+
+            const name =
+                nameInput.value.trim();
+
+            const email =
+                emailInput.value.trim();
+
+
+            if(!name){
+
+                showStatus(
+                    "Please enter your full name.",
+                    "error"
+                );
+
+                throw new Error(
+                    "Name required."
+                );
+            }
+
+
+            if(!email){
+
+                showStatus(
+                    "Please enter your email.",
+                    "error"
+                );
+
+                throw new Error(
+                    "Email required."
+                );
+            }
+
+
+            if(email.toLowerCase() !==
+               (user.email || "").toLowerCase()){
+
+                showStatus(
+                    "Use the same email as your ACADEMY account.",
+                    "error"
+                );
+
+                throw new Error(
+                    "Email mismatch."
+                );
+            }
+
+
+            showStatus(
+                "Creating your secure PayPal order..."
+            );
+
+
+            const session =
+                await supabaseClient.auth.getSession();
+
+            const accessToken =
+                session.data.session?.access_token;
+
+
+            if(!accessToken){
+
+                window.location.href =
+                    "login.html?redirect=courses.html";
+
+                throw new Error(
+                    "Session expired."
+                );
+            }
+
+
+            const response =
+                await fetch(
+                    "/api/create-order",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " + accessToken
+                        },
+
+                        body:JSON.stringify({
+                            courseSlug:COURSE_SLUG
+                        })
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if(!response.ok){
+
+                throw new Error(
+                    result.error ||
+                    "Could not create PayPal order."
+                );
+            }
+
+
+            if(!result.orderID){
+
+                throw new Error(
+                    "PayPal did not return an order ID."
+                );
+            }
+
+
+            clearStatus();
+
+            return result.orderID;
+        },
+
+
+        /* =================================================
+           APPROVE
+        ================================================= */
+
+        async onApprove(data){
+
+            try{
+
+                showStatus(
+                    "Payment approved. Confirming your purchase..."
+                );
+
+
+                const session =
+                    await supabaseClient.auth.getSession();
+
+                const accessToken =
+                    session.data.session?.access_token;
+
+
+                if(!accessToken){
 
                     throw new Error(
-                        "Login required."
+                        "Your session expired. Please log in again."
                     );
                 }
 
 
-                showStatus(
-                    "Creating secure order..."
-                );
-
-
                 const response =
                     await fetch(
-                        "/api/create-order",
+                        "/api/capture-order",
                         {
                             method:"POST",
 
@@ -1599,259 +1610,110 @@ function renderPayPal(){
                                     "application/json",
 
                                 "Authorization":
-                                    `Bearer ${currentSession.access_token}`
-                            }
+                                    "Bearer " + accessToken
+                            },
+
+                            body:JSON.stringify({
+                                orderID:data.orderID,
+                                courseSlug:COURSE_SLUG
+                            })
                         }
                     );
 
 
-                let result;
-
-                try{
-
-                    result =
-                        await response.json();
-
-                }
-                catch{
-
-                    throw new Error(
-                        "The payment server returned an invalid response."
-                    );
-
-                }
+                const result =
+                    await response.json();
 
 
                 if(!response.ok){
 
                     throw new Error(
                         result.error ||
-                        "Unable to create payment."
+                        "Payment verification failed."
                     );
-
                 }
 
 
-                if(
-                    !result.orderID
-                ){
+                if(!result.success){
 
                     throw new Error(
-                        "PayPal order ID was not returned."
+                        "Purchase could not be confirmed."
                     );
-
                 }
 
-
-                return result.orderID;
-
-            },
-
-
-        /* =============================================
-           CAPTURE REAL PAYMENT
-        ============================================= */
-
-        onApprove:
-            async function(data){
-
-                try{
-
-                    await loadSession();
-
-
-                    if(!currentSession){
-
-                        throw new Error(
-                            "Your session expired. Please log in again."
-                        );
-
-                    }
-
-
-                    showStatus(
-                        "Payment approved. Confirming your purchase..."
-                    );
-
-
-                    document
-                        .querySelector(
-                            "#paypal-button-container"
-                        )
-                        .classList.add(
-                            "processing"
-                        );
-
-
-                    const response =
-                        await fetch(
-                            "/api/capture-order",
-                            {
-                                method:"POST",
-
-                                headers:{
-                                    "Content-Type":
-                                        "application/json",
-
-                                    "Authorization":
-                                        `Bearer ${currentSession.access_token}`
-                                },
-
-                                body:
-                                    JSON.stringify({
-                                        orderID:
-                                            data.orderID
-                                    })
-                            }
-                        );
-
-
-                    let result;
-
-                    try{
-
-                        result =
-                            await response.json();
-
-                    }
-                    catch{
-
-                        throw new Error(
-                            "The payment server returned an invalid response."
-                        );
-
-                    }
-
-
-                    if(!response.ok){
-
-                        throw new Error(
-                            result.error ||
-                            "Payment confirmation failed."
-                        );
-
-                    }
-
-
-                    if(
-                        result.success !==
-                        true
-                    ){
-
-                        throw new Error(
-                            "Your payment could not be confirmed."
-                        );
-
-                    }
-
-
-                    /*
-                     * IMPORTANT:
-                     * We do NOT use localStorage here.
-                     *
-                     * The server has verified the PayPal
-                     * payment and created the purchase
-                     * in Supabase.
-                     */
-
-                    setUnlockedState();
-
-
-                    showStatus(
-                        "✓ Payment successful. Your course is now unlocked."
-                    );
-
-
-                    setTimeout(
-                        function(){
-
-                            window.location.href =
-                                "lesson.html";
-
-                        },
-                        1200
-                    );
-
-                }
-                catch(error){
-
-                    console.error(
-                        "Capture error:",
-                        error
-                    );
-
-                    document
-                        .querySelector(
-                            "#paypal-button-container"
-                        )
-                        .classList.remove(
-                            "processing"
-                        );
-
-
-                    showStatus(
-                        error.message ||
-                        "Payment confirmation failed. Please contact support."
-                    );
-
-                }
-
-            },
-
-
-        /* =============================================
-           CANCEL
-        ============================================= */
-
-        onCancel:
-            function(){
 
                 showStatus(
-                    "Payment cancelled. No course access was granted."
+                    "Payment complete. Your course is now unlocked.",
+                    "success"
                 );
 
-            },
+
+                agencyBadge.textContent =
+                    "OWNED";
+
+                agencyAction.textContent =
+                    "CONTINUE COURSE →";
 
 
-        /* =============================================
-           ERROR
-        ============================================= */
+                setTimeout(
+                    function(){
 
-        onError:
-            function(error){
+                        window.location.href =
+                            "lesson.html?course=agency-blueprint";
+
+                    },
+                    1200
+                );
+
+
+            }catch(error){
 
                 console.error(
-                    "PayPal error:",
+                    "Capture error:",
                     error
                 );
 
                 showStatus(
-                    "PayPal could not complete the payment. Please try again."
+                    error.message ||
+                    "Something went wrong while confirming your payment.",
+                    "error"
                 );
-
             }
+        },
 
-    })
-    .render(
+
+        /* =================================================
+           CANCEL
+        ================================================= */
+
+        onCancel(){
+
+            showStatus(
+                "Payment cancelled. No charge was completed."
+            );
+        },
+
+
+        /* =================================================
+           ERROR
+        ================================================= */
+
+        onError(error){
+
+            console.error(
+                "PayPal error:",
+                error
+            );
+
+            showStatus(
+                "PayPal could not complete the checkout. Please try again.",
+                "error"
+            );
+        }
+
+    }).render(
         "#paypal-button-container"
     );
-
-
-    paypalRendered = true;
-
-}
-
-
-/* =========================================================
-   COMING SOON
-========================================================= */
-
-function comingSoon(){
-
-    alert(
-        "This course is coming soon."
-    );
-
 }
 
 
@@ -1860,14 +1722,10 @@ function comingSoon(){
 ========================================================= */
 
 const filters =
-    document.querySelectorAll(
-        ".filter"
-    );
+    document.querySelectorAll(".filter");
 
 const cards =
-    document.querySelectorAll(
-        ".course-card"
-    );
+    document.querySelectorAll(".course-card");
 
 
 filters.forEach(
@@ -1878,19 +1736,10 @@ filters.forEach(
             function(){
 
                 filters.forEach(
-                    function(item){
-
-                        item.classList.remove(
-                            "active"
-                        );
-
-                    }
+                    f => f.classList.remove("active")
                 );
 
-
-                filter.classList.add(
-                    "active"
-                );
+                filter.classList.add("active");
 
 
                 const selected =
@@ -1900,30 +1749,23 @@ filters.forEach(
                 cards.forEach(
                     function(card){
 
+                        const category =
+                            card.dataset.category;
+
+
                         if(
-                            selected ===
-                            "all"
+                            selected === "all" ||
+                            category === selected
                         ){
 
                             card.style.display =
-                                "flex";
+                                "";
 
-                            return;
+                        }else{
 
+                            card.style.display =
+                                "none";
                         }
-
-
-                        const categories =
-                            card.dataset.category
-                                .split(" ");
-
-
-                        card.style.display =
-                            categories.includes(
-                                selected
-                            )
-                            ? "flex"
-                            : "none";
 
                     }
                 );
@@ -1936,20 +1778,15 @@ filters.forEach(
 
 
 /* =========================================================
-   ESC
+   ESCAPE KEY
 ========================================================= */
 
 document.addEventListener(
     "keydown",
     function(event){
 
-        if(
-            event.key ===
-            "Escape"
-        ){
-
+        if(event.key === "Escape"){
             closeCheckout();
-
         }
 
     }
@@ -1960,48 +1797,20 @@ document.addEventListener(
    AUTH STATE
 ========================================================= */
 
-supabaseClient
-    .auth
-    .onAuthStateChange(
-        async function(
-            event,
-            session
-        ){
+supabaseClient.auth.onAuthStateChange(
+    function(){
 
-            currentSession =
-                session || null;
+        updateCourseButton();
 
-            currentUser =
-                session?.user || null;
-
-
-            if(
-                event ===
-                "SIGNED_OUT"
-            ){
-
-                setLockedState();
-
-            }
-            else{
-
-                await checkOwnership();
-
-            }
-
-        }
-    );
+    }
+);
 
 
 /* =========================================================
    INITIALIZE
 ========================================================= */
 
-(async function(){
-
-    await checkOwnership();
-
-})();
+updateCourseButton();
 
 </script>
 
