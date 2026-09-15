@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Courses — ACADEMY.</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- LIVE PAYPAL -->
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_LIVE_PAYPAL_CLIENT_ID&currency=USD&intent=capture"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#050505;
+    color:#f5f5f5;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button,input{
+    font:inherit;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    pointer-events:none;
+    background:
+        radial-gradient(circle at 15% 10%,rgba(255,255,255,.07),transparent 28%),
+        radial-gradient(circle at 85% 40%,rgba(255,255,255,.04),transparent 30%);
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:100;
+    pointer-events:none;
+    opacity:.025;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* NAV */
+
+.navbar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:78px;
+    padding:0 5vw;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:90;
+    background:rgba(5,5,5,.68);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.logo{
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:#666;
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+    color:#888;
+    font-size:12px;
+}
+
+.nav-links a{
+    transition:.3s ease;
+}
+
+.nav-links a:hover{
+    color:white;
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.login{
+    color:#888;
+    font-size:12px;
+}
+
+.login:hover{
+    color:white;
+}
+
+.nav-btn{
+    padding:11px 17px;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:100px;
+    font-size:10px;
+    font-weight:700;
+    transition:.3s ease;
+}
+
+.nav-btn:hover{
+    background:white;
+    color:black;
+}
+
+/* HERO */
+
+.hero{
+    min-height:75vh;
+    padding:170px 7vw 100px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero-grid{
+    position:absolute;
+    inset:0;
+    opacity:.12;
+    background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+    background-size:80px 80px;
+    mask-image:linear-gradient(to bottom,black,transparent);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.eyebrow{
+    color:#666;
+    font-family:monospace;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-bottom:28px;
+}
+
+.hero h1{
+    font-size:clamp(65px,11vw,145px);
+    line-height:.85;
+    letter-spacing:-8px;
+}
+
+.hero h1 span{
+    color:#4d4d4d;
+}
+
+.hero p{
+    max-width:580px;
+    margin-top:35px;
+    color:#777;
+    font-size:15px;
+    line-height:1.75;
+}
+
+/* FILTERS */
+
+.filters{
+    padding:25px 7vw;
+    border-top:1px solid rgba(255,255,255,.08);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;
+    gap:10px;
+    overflow-x:auto;
+}
+
+.filter{
+    flex-shrink:0;
+    padding:9px 15px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:100px;
+    color:#777;
+    background:transparent;
+    cursor:pointer;
+    font-size:10px;
+    transition:.3s ease;
+}
+
+.filter:hover,
+.filter.active{
+    background:white;
+    color:black;
+    border-color:white;
+}
+
+/* LIBRARY */
+
+.library{
+    padding:120px 7vw 160px;
+}
+
+.section-label{
+    color:#555;
+    font-family:monospace;
+    font-size:10px;
+    letter-spacing:2px;
+    margin-bottom:22px;
+}
+
+.library-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    margin-bottom:60px;
+}
+
+.library-header h2{
+    font-size:clamp(48px,7vw,85px);
+    line-height:.9;
+    letter-spacing:-5px;
+}
+
+.library-header p{
+    max-width:320px;
+    color:#777;
+    font-size:13px;
+    line-height:1.7;
+}
+
+/* CARDS */
+
+.course-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.course-card{
+    min-height:430px;
+    padding:35px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+    transition:transform .4s ease,border-color .4s ease;
+}
+
+.course-card:hover{
+    transform:translateY(-8px);
+    border-color:rgba(255,255,255,.28);
+}
+
+.course-card::before{
+    content:"";
+    position:absolute;
+    width:400px;
+    height:400px;
+    right:-180px;
+    top:-180px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.08),transparent 65%);
+}
+
+.course-card>*{
+    position:relative;
+    z-index:2;
+}
+
+.course-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.course-number{
+    color:#555;
+    font-family:monospace;
+    font-size:10px;
+}
+
+.locked-badge{
+    padding:7px 11px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:100px;
+    color:#888;
+    font-size:9px;
+    letter-spacing:1px;
+}
+
+.open-badge{
+    color:#ddd;
+    border-color:rgba(255,255,255,.3);
+}
+
+.course-title{
+    font-size:clamp(38px,5vw,62px);
+    line-height:.9;
+    letter-spacing:-4px;
+}
+
+.course-title span{
+    color:#555;
+}
+
+.course-description{
+    margin-top:20px;
+    max-width:500px;
+    color:#777;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.course-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+}
+
+.course-meta{
+    display:flex;
+    gap:25px;
+}
+
+.meta small{
+    display:block;
+    color:#555;
+    font-family:monospace;
+    font-size:8px;
+    margin-bottom:5px;
+}
+
+.meta strong{
+    font-size:11px;
+    font-weight:500;
+}
+
+.course-action{
+    padding:13px 17px;
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:100px;
+    background:transparent;
+    color:#bbb;
+    cursor:pointer;
+    font-size:10px;
+    transition:.3s ease;
+}
+
+.course-action:hover{
+    background:white;
+    color:black;
+}
+
+.coming{
+    opacity:.5;
+}
+
+.coming .course-action{
+    cursor:default;
+}
+
+.coming .course-action:hover{
+    background:transparent;
+    color:#bbb;
+}
+
+/* CHECKOUT */
+
+.checkout-overlay{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(18px);
+}
+
+.checkout-overlay.show{
+    display:flex;
+}
+
+.checkout{
+    width:min(920px,100%);
+    max-height:90vh;
+    overflow-y:auto;
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 40px 120px rgba(0,0,0,.7);
+    animation:checkoutIn .35s ease;
+}
+
+@keyframes checkoutIn{
+    from{
+        opacity:0;
+        transform:translateY(25px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.close{
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:35px;
+    height:35px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:50%;
+    background:#111;
+    color:#888;
+    cursor:pointer;
+    z-index:5;
+}
+
+.close:hover{
+    color:white;
+}
+
+.checkout-info{
+    padding:50px;
+    border-right:1px solid rgba(255,255,255,.08);
+}
+
+.checkout-tag{
+    color:#666;
+    font-family:monospace;
+    font-size:9px;
+    letter-spacing:2px;
+    margin-bottom:25px;
+}
+
+.checkout-info h2{
+    font-size:48px;
+    line-height:.9;
+    letter-spacing:-3px;
+}
+
+.checkout-info h2 span{
+    color:#555;
+}
+
+.checkout-info p{
+    margin-top:25px;
+    color:#777;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.includes{
+    margin-top:35px;
+}
+
+.includes-title{
+    color:#aaa;
+    font-size:11px;
+    margin-bottom:15px;
+}
+
+.includes div{
+    color:#777;
+    font-size:11px;
+    padding:9px 0;
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.checkout-form{
+    padding:50px;
+}
+
+.price{
+    margin-bottom:30px;
+}
+
+.price small{
+    display:block;
+    color:#666;
+    font-family:monospace;
+    font-size:9px;
+    margin-bottom:5px;
+}
+
+.price strong{
+    font-size:55px;
+    letter-spacing:-3px;
+}
+
+.price span{
+    color:#666;
+    font-size:11px;
+}
+
+.form-title{
+    color:#aaa;
+    font-size:12px;
+    margin-bottom:15px;
+}
+
+.input{
+    width:100%;
+    padding:15px;
+    margin-bottom:12px;
+    outline:none;
+    border:1px solid rgba(255,255,255,.12);
+    background:#111;
+    color:white;
+    font-size:12px;
+}
+
+#paypal-button-container{
+    margin-top:15px;
+    width:100%;
+}
+
+.secure{
+    margin-top:18px;
+    text-align:center;
+    color:#555;
+    font-family:monospace;
+    font-size:8px;
+    letter-spacing:1px;
+}
+
+.payment-status{
+    display:none;
+    margin-top:15px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,.12);
+    color:#aaa;
+    font-size:11px;
+    line-height:1.5;
+}
+
+.payment-status.show{
+    display:block;
+}
+
+.processing{
+    pointer-events:none;
+    opacity:.55;
+}
+
+/* FOOTER */
+
+footer{
+    padding:35px 7vw;
+    border-top:1px solid rgba(255,255,255,.1);
+    display:flex;
+    justify-content:space-between;
+    color:#555;
+    font-family:monospace;
+    font-size:10px;
+}
+
+.footer-links{
+    display:flex;
+    gap:25px;
+}
+
+.footer-links a:hover{
+    color:white;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+    .navbar{
+        height:70px;
+        padding:0 6vw;
+    }
+
+    .nav-links{
+        display:none;
+    }
+
+    .login{
+        display:none;
+    }
+
+    .hero{
+        padding:135px 6vw 90px;
+    }
+
+    .hero h1{
+        font-size:72px;
+        letter-spacing:-5px;
+    }
+
+    .library{
+        padding:100px 6vw 120px;
+    }
+
+    .library-header{
+        display:block;
+    }
+
+    .library-header p{
+        margin-top:20px;
+    }
+
+    .course-grid{
+        grid-template-columns:1fr;
+    }
+
+    .course-card{
+        min-height:440px;
+    }
+
+    .course-bottom{
+        display:block;
+    }
+
+    .course-meta{
+        margin-bottom:22px;
+    }
+
+    .checkout{
+        grid-template-columns:1fr;
+        max-height:92vh;
+    }
+
+    .checkout-info{
+        border-right:none;
+        border-bottom:1px solid rgba(255,255,255,.08);
+        padding:35px;
+    }
+
+    .checkout-form{
+        padding:35px;
+    }
+
+    .checkout-info h2{
+        font-size:40px;
+    }
+
+    footer{
+        flex-direction:column;
+        gap:20px;
+        padding:30px 6vw;
+    }
+}
+
+@media(max-width:430px){
+
+    .hero h1{
+        font-size:63px;
+    }
+
+    .course-card{
+        padding:25px;
+    }
+
+    .course-title{
+        font-size:42px;
+    }
+
+    .course-meta{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        ACADEMY<span>.</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="courses.html">Courses</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+    </div>
+
+    <div class="nav-actions">
+
+        <a href="login.html" class="login">
+            Login
+        </a>
+
+        <a href="dashboard.html" class="nav-btn">
+            DASHBOARD
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            ACADEMY. · COURSE LIBRARY
+        </div>
+
+        <h1>
+            Learn.<br>
+            <span>Build.</span><br>
+            Repeat.
+        </h1>
+
+        <p>
+            Practical courses designed around real skills,
+            real projects and real outcomes. Choose your
+            next skill and start building.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- FILTERS -->
+
+<div class="filters">
+
+    <button class="filter active" data-filter="all">
+        ALL
+    </button>
+
+    <button class="filter" data-filter="business">
+        BUSINESS
+    </button>
+
+    <button class="filter" data-filter="ai">
+        AI
+    </button>
+
+    <button class="filter" data-filter="design">
+        DESIGN
+    </button>
+
+    <button class="filter" data-filter="coming">
+        COMING SOON
+    </button>
+
+</div>
+
+
+<!-- LIBRARY -->
+
+<section class="library">
+
+    <div class="library-header">
+
+        <div>
+
+            <div class="section-label">
+                / COURSE LIBRARY
+            </div>
+
+            <h2>
+                Choose<br>
+                your path.
+            </h2>
+
+        </div>
+
+        <p>
+            Start with one course and build
+            your knowledge step by step.
+        </p>
+
+    </div>
+
+
+    <div class="course-grid">
+
+
+        <!-- COURSE 001 -->
+
+        <article
+            class="course-card"
+            data-category="business"
+        >
+
+            <div class="course-top">
+
+                <span class="course-number">
+                    COURSE · 001
+                </span>
+
+                <span
+                    class="locked-badge"
+                    id="agencyBadge"
+                >
+                    🔒 LOCKED
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <h3 class="course-title">
+                    AGENCY<br>
+                    <span>BLUEPRINT</span>
+                </h3>
+
+                <p class="course-description">
+                    Build a digital agency from zero.
+                    Learn positioning, offers, pricing,
+                    outreach, sales, delivery, AI,
+                    automation and scaling.
+                </p>
+
+            </div>
+
+
+            <div class="course-bottom">
+
+                <div class="course-meta">
+
+                    <div class="meta">
+                        <small>LESSONS</small>
+                        <strong>25</strong>
+                    </div>
+
+                    <div class="meta">
+                        <small>LEVEL</small>
+                        <strong>ALL LEVELS</strong>
+                    </div>
+
+                    <div class="meta">
+                        <small>PRICE</small>
+                        <strong>$29</strong>
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="course-action"
+                    id="agencyAction"
+                    onclick="openCheckout()"
+                >
+                    UNLOCK COURSE →
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- COURSE 002 -->
+
+        <article
+            class="course-card coming"
+            data-category="ai coming"
+        >
+
+            <div class="course-top">
+
+                <span class="course-number">
+                    COURSE · 002
+                </span>
+
+                <span class="locked-badge">
+                    COMING SOON
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <h3 class="course-title">
+                    AI<br>
+                    <span>MASTERY</span>
+                </h3>
+
+                <p class="course-description">
+                    Learn how to use modern AI tools
+                    for productivity, content, research,
+                    automation and creative work.
+                </p>
+
+            </div>
+
+
+            <div class="course-bottom">
+
+                <div class="course-meta">
+
+                    <div class="meta">
+                        <small>STATUS</small>
+                        <strong>SOON</strong>
+                    </div>
+
+                </div>
+
+                <button
+                    class="course-action"
+                    onclick="comingSoon()"
+                >
+                    COMING SOON
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- COURSE 003 -->
+
+        <article
+            class="course-card coming"
+            data-category="design coming"
+        >
+
+            <div class="course-top">
+
+                <span class="course-number">
+                    COURSE · 003
+                </span>
+
+                <span class="locked-badge">
+                    COMING SOON
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <h3 class="course-title">
+                    WEB DESIGN<br>
+                    <span>PRO</span>
+                </h3>
+
+                <p class="course-description">
+                    Learn modern web design,
+                    frontend development, visual systems,
+                    animations and creative direction.
+                </p>
+
+            </div>
+
+
+            <div class="course-bottom">
+
+                <div class="course-meta">
+
+                    <div class="meta">
+                        <small>STATUS</small>
+                        <strong>SOON</strong>
+                    </div>
+
+                </div>
+
+                <button
+                    class="course-action"
+                    onclick="comingSoon()"
+                >
+                    COMING SOON
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- CHECKOUT -->
+
+<div
+    class="checkout-overlay"
+    id="checkoutOverlay"
+    onclick="closeOutside(event)"
+>
+
+    <div class="checkout">
+
+        <button
+            class="close"
+            onclick="closeCheckout()"
+            aria-label="Close checkout"
+        >
+            ×
+        </button>
+
+
+        <div class="checkout-info">
+
+            <div class="checkout-tag">
+                ACADEMY. · SECURE CHECKOUT
+            </div>
+
+            <h2>
+                AGENCY<br>
+                <span>BLUEPRINT</span>
+            </h2>
+
+            <p>
+                Get full access to the complete
+                25-lesson Agency Blueprint course
+                and learn how to build a modern
+                digital agency from zero.
+            </p>
+
+
+            <div class="includes">
+
+                <div class="includes-title">
+                    YOUR ACCESS INCLUDES
+                </div>
+
+                <div>✓ 25 structured lessons</div>
+                <div>✓ Agency business model</div>
+                <div>✓ Offer & pricing systems</div>
+                <div>✓ Client acquisition</div>
+                <div>✓ Sales & closing</div>
+                <div>✓ AI & automation</div>
+                <div>✓ Scaling systems</div>
+
+            </div>
+
+        </div>
+
+
+        <div class="checkout-form">
+
+            <div class="price">
+
+                <small>
+                    ONE-TIME ACCESS
+                </small>
+
+                <strong>$29</strong>
+
+                <span>USD</span>
+
+            </div>
+
+
+            <div class="form-title">
+                Student account
+            </div>
+
+
+            <input
+                class="input"
+                id="checkoutName"
+                type="text"
+                placeholder="Full name"
+                readonly
+            >
+
+
+            <input
+                class="input"
+                id="checkoutEmail"
+                type="email"
+                placeholder="Email address"
+                readonly
+            >
+
+
+            <div id="paypal-button-container"></div>
+
+
+            <div
+                class="payment-status"
+                id="paymentStatus"
+            ></div>
+
+
+            <div class="secure">
+                🔒 SECURE PAYPAL CHECKOUT · ACADEMY.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div>
+        © 2026 ACADEMY.
+    </div>
+
+    <div class="footer-links">
+
+        <a href="index.html">Home</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="about.html">About</a>
+        <a href="login.html">Login</a>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+    "https://jbhpkkwpdsyjbgizqtqf.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_odgH5ZbkfIhTPSfJO6ubcA_RAXUWYIA";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
+
+/* =========================================================
+   COURSE
+========================================================= */
+
+const COURSE_SLUG =
+    "agency-blueprint";
+
+const COURSE_PRICE =
+    "29.00";
+
+
+let currentUser = null;
+let currentSession = null;
+let paypalRendered = false;
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const overlay =
+    document.getElementById(
+        "checkoutOverlay"
+    );
+
+const paypalContainer =
+    document.getElementById(
+        "paypal-button-container"
+    );
+
+const paymentStatus =
+    document.getElementById(
+        "paymentStatus"
+    );
+
+const nameInput =
+    document.getElementById(
+        "checkoutName"
+    );
+
+const emailInput =
+    document.getElementById(
+        "checkoutEmail"
+    );
+
+const agencyBadge =
+    document.getElementById(
+        "agencyBadge"
+    );
+
+const agencyAction =
+    document.getElementById(
+        "agencyAction"
+    );
+
+
+/* =========================================================
+   SESSION
+========================================================= */
+
+async function loadSession(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getSession();
+
+
+    if(error){
+
+        console.error(
+            "Session error:",
+            error
+        );
+
+        return null;
+    }
+
+
+    currentSession =
+        data.session || null;
+
+    currentUser =
+        currentSession?.user || null;
+
+
+    return currentSession;
+}
+
+
+/* =========================================================
+   COURSE ID
+========================================================= */
+
+async function getCourseId(){
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("courses")
+            .select("id")
+            .eq(
+                "slug",
+                COURSE_SLUG
+            )
+            .single();
+
+
+    if(error){
+
+        console.error(
+            "Course lookup error:",
+            error
+        );
+
+        return null;
+    }
+
+
+    return data.id;
+}
+
+
+/* =========================================================
+   CHECK OWNERSHIP
+========================================================= */
+
+async function checkOwnership(){
+
+    await loadSession();
+
+
+    if(!currentUser){
+
+        setLockedState();
+
+        return false;
+    }
+
+
+    const courseId =
+        await getCourseId();
+
+
+    if(!courseId){
+
+        setLockedState();
+
+        return false;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("purchases")
+            .select("id,status")
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .eq(
+                "course_id",
+                courseId
+            )
+            .eq(
+                "status",
+                "completed"
+            )
+            .maybeSingle();
+
+
+    if(error){
+
+        console.error(
+            "Ownership error:",
+            error
+        );
+
+        setLockedState();
+
+        return false;
+    }
+
+
+    if(data){
+
+        setUnlockedState();
+
+        return true;
+    }
+
+
+    setLockedState();
+
+    return false;
+}
+
+
+/* =========================================================
+   LOCKED
+========================================================= */
+
+function setLockedState(){
+
+    agencyBadge.textContent =
+        "🔒 LOCKED";
+
+    agencyBadge.classList.remove(
+        "open-badge"
+    );
+
+    agencyAction.textContent =
+        "UNLOCK COURSE →";
+
+    agencyAction.onclick =
+        openCheckout;
+}
+
+
+/* =========================================================
+   UNLOCKED
+========================================================= */
+
+function setUnlockedState(){
+
+    agencyBadge.textContent =
+        "✓ UNLOCKED";
+
+    agencyBadge.classList.add(
+        "open-badge"
+    );
+
+    agencyAction.textContent =
+        "OPEN COURSE →";
+
+    agencyAction.onclick =
+        function(){
+
+            window.location.href =
+                "lesson.html";
+
+        };
+}
+
+
+/* =========================================================
+   OPEN CHECKOUT
+========================================================= */
+
+async function openCheckout(){
+
+    await loadSession();
+
+
+    if(!currentUser){
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    const owned =
+        await checkOwnership();
+
+
+    if(owned){
+
+        window.location.href =
+            "lesson.html";
+
+        return;
+    }
+
+
+    const fullName =
+        currentUser
+            .user_metadata
+            ?.full_name || "";
+
+
+    const email =
+        currentUser.email || "";
+
+
+    nameInput.value =
+        fullName;
+
+    emailInput.value =
+        email;
+
+
+    paymentStatus.classList.remove(
+        "show"
+    );
+
+
+    overlay.classList.add(
+        "show"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    if(!paypalRendered){
+
+        renderPayPal();
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOSE
+========================================================= */
+
+function closeCheckout(){
+
+    overlay.classList.remove(
+        "show"
+    );
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+function closeOutside(event){
+
+    if(
+        event.target ===
+        overlay
+    ){
+
+        closeCheckout();
+
+    }
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function showStatus(message){
+
+    paymentStatus.textContent =
+        message;
+
+    paymentStatus.classList.add(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   PAYPAL
+========================================================= */
+
+function renderPayPal(){
+
+    if(
+        typeof paypal ===
+        "undefined"
+    ){
+
+        showStatus(
+            "PayPal could not load. Please refresh the page and try again."
+        );
+
+        return;
+    }
+
+
+    paypal.Buttons({
+
+        style:{
+            layout:"vertical",
+            color:"gold",
+            shape:"rect",
+            label:"paypal",
+            height:48
+        },
+
+
+        /* =============================================
+           CREATE REAL ORDER
+        ============================================= */
+
+        createOrder:
+            async function(){
+
+                await loadSession();
+
+
+                if(!currentSession){
+
+                    window.location.href =
+                        "login.html";
+
+                    throw new Error(
+                        "Login required."
+                    );
+                }
+
+
+                showStatus(
+                    "Creating secure order..."
+                );
+
+
+                const response =
+                    await fetch(
+                        "/api/create-order",
+                        {
+                            method:"POST",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json",
+
+                                "Authorization":
+                                    `Bearer ${currentSession.access_token}`
+                            }
+                        }
+                    );
+
+
+                let result;
+
+                try{
+
+                    result =
+                        await response.json();
+
+                }
+                catch{
+
+                    throw new Error(
+                        "The payment server returned an invalid response."
+                    );
+
+                }
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        result.error ||
+                        "Unable to create payment."
+                    );
+
+                }
+
+
+                if(
+                    !result.orderID
+                ){
+
+                    throw new Error(
+                        "PayPal order ID was not returned."
+                    );
+
+                }
+
+
+                return result.orderID;
+
+            },
+
+
+        /* =============================================
+           CAPTURE REAL PAYMENT
+        ============================================= */
+
+        onApprove:
+            async function(data){
+
+                try{
+
+                    await loadSession();
+
+
+                    if(!currentSession){
+
+                        throw new Error(
+                            "Your session expired. Please log in again."
+                        );
+
+                    }
+
+
+                    showStatus(
+                        "Payment approved. Confirming your purchase..."
+                    );
+
+
+                    document
+                        .querySelector(
+                            "#paypal-button-container"
+                        )
+                        .classList.add(
+                            "processing"
+                        );
+
+
+                    const response =
+                        await fetch(
+                            "/api/capture-order",
+                            {
+                                method:"POST",
+
+                                headers:{
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        `Bearer ${currentSession.access_token}`
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        orderID:
+                                            data.orderID
+                                    })
+                            }
+                        );
+
+
+                    let result;
+
+                    try{
+
+                        result =
+                            await response.json();
+
+                    }
+                    catch{
+
+                        throw new Error(
+                            "The payment server returned an invalid response."
+                        );
+
+                    }
+
+
+                    if(!response.ok){
+
+                        throw new Error(
+                            result.error ||
+                            "Payment confirmation failed."
+                        );
+
+                    }
+
+
+                    if(
+                        result.success !==
+                        true
+                    ){
+
+                        throw new Error(
+                            "Your payment could not be confirmed."
+                        );
+
+                    }
+
+
+                    /*
+                     * IMPORTANT:
+                     * We do NOT use localStorage here.
+                     *
+                     * The server has verified the PayPal
+                     * payment and created the purchase
+                     * in Supabase.
+                     */
+
+                    setUnlockedState();
+
+
+                    showStatus(
+                        "✓ Payment successful. Your course is now unlocked."
+                    );
+
+
+                    setTimeout(
+                        function(){
+
+                            window.location.href =
+                                "lesson.html";
+
+                        },
+                        1200
+                    );
+
+                }
+                catch(error){
+
+                    console.error(
+                        "Capture error:",
+                        error
+                    );
+
+                    document
+                        .querySelector(
+                            "#paypal-button-container"
+                        )
+                        .classList.remove(
+                            "processing"
+                        );
+
+
+                    showStatus(
+                        error.message ||
+                        "Payment confirmation failed. Please contact support."
+                    );
+
+                }
+
+            },
+
+
+        /* =============================================
+           CANCEL
+        ============================================= */
+
+        onCancel:
+            function(){
+
+                showStatus(
+                    "Payment cancelled. No course access was granted."
+                );
+
+            },
+
+
+        /* =============================================
+           ERROR
+        ============================================= */
+
+        onError:
+            function(error){
+
+                console.error(
+                    "PayPal error:",
+                    error
+                );
+
+                showStatus(
+                    "PayPal could not complete the payment. Please try again."
+                );
+
+            }
+
+    })
+    .render(
+        "#paypal-button-container"
+    );
+
+
+    paypalRendered = true;
+
+}
+
+
+/* =========================================================
+   COMING SOON
+========================================================= */
+
+function comingSoon(){
+
+    alert(
+        "This course is coming soon."
+    );
+
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+const filters =
+    document.querySelectorAll(
+        ".filter"
+    );
+
+const cards =
+    document.querySelectorAll(
+        ".course-card"
+    );
+
+
+filters.forEach(
+    function(filter){
+
+        filter.addEventListener(
+            "click",
+            function(){
+
+                filters.forEach(
+                    function(item){
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                filter.classList.add(
+                    "active"
+                );
+
+
+                const selected =
+                    filter.dataset.filter;
+
+
+                cards.forEach(
+                    function(card){
+
+                        if(
+                            selected ===
+                            "all"
+                        ){
+
+                            card.style.display =
+                                "flex";
+
+                            return;
+
+                        }
+
+
+                        const categories =
+                            card.dataset.category
+                                .split(" ");
+
+
+                        card.style.display =
+                            categories.includes(
+                                selected
+                            )
+                            ? "flex"
+                            : "none";
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Escape"
+        ){
+
+            closeCheckout();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabaseClient
+    .auth
+    .onAuthStateChange(
+        async function(
+            event,
+            session
+        ){
+
+            currentSession =
+                session || null;
+
+            currentUser =
+                session?.user || null;
+
+
+            if(
+                event ===
+                "SIGNED_OUT"
+            ){
+
+                setLockedState();
+
+            }
+            else{
+
+                await checkOwnership();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+(async function(){
+
+    await checkOwnership();
+
+})();
+
+</script>
+
+</body>
+</html>

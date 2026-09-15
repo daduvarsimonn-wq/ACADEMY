@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ACADEMY. — Learn. Build. Become.</title>
+
+<meta name="description" content="ACADEMY. — Premium practical courses designed to help you learn valuable skills and build real projects.">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #050505;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+}
+
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(255,255,255,.075),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 35%,
+            rgba(255,255,255,.045),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(255,255,255,.025),
+            transparent 35%
+        );
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: .025;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 78px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 5vw;
+
+    z-index: 90;
+
+    background: rgba(5,5,5,.62);
+    backdrop-filter: blur(20px);
+
+    border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: #666;
+    font-weight: 400;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    font-size: 12px;
+    color: #888;
+}
+
+.nav-links a {
+    transition: .3s ease;
+}
+
+.nav-links a:hover {
+    color: #fff;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.login-link {
+    color: #888;
+    font-size: 12px;
+    transition: .3s ease;
+}
+
+.login-link:hover {
+    color: white;
+}
+
+.nav-button {
+    padding: 11px 17px;
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 100px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    transition: .3s ease;
+}
+
+.nav-button:hover {
+    background: #fff;
+    color: #000;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: 100vh;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+        150px 7vw
+        100px;
+
+    overflow: hidden;
+}
+
+.hero-grid {
+    position: absolute;
+    inset: 0;
+
+    opacity: .13;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.07) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.07) 1px,
+            transparent 1px
+        );
+
+    background-size: 80px 80px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 80%
+        );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+
+    max-width: 1100px;
+}
+
+.eyebrow {
+    font-family: monospace;
+
+    color: #777;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 30px;
+
+    animation: fadeUp .9s ease both;
+}
+
+.hero h1 {
+    max-width: 1050px;
+
+    font-size:
+        clamp(
+            65px,
+            11vw,
+            155px
+        );
+
+    line-height: .84;
+
+    letter-spacing: -8px;
+
+    font-weight: 800;
+
+    animation:
+        fadeUp .9s .1s ease both;
+}
+
+.hero h1 .muted {
+    color: #4d4d4d;
+}
+
+.hero-description {
+    max-width: 620px;
+
+    margin-top: 42px;
+
+    color: #888;
+
+    font-size: 16px;
+
+    line-height: 1.75;
+
+    animation:
+        fadeUp .9s .2s ease both;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+
+    margin-top: 36px;
+
+    animation:
+        fadeUp .9s .3s ease both;
+}
+
+.primary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px 24px;
+
+    background: #f4f4f4;
+    color: #050505;
+
+    border-radius: 100px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: .35s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 20px 50px
+        rgba(255,255,255,.12);
+}
+
+.secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px 24px;
+
+    border: 1px solid rgba(255,255,255,.16);
+
+    border-radius: 100px;
+
+    color: #999;
+
+    font-size: 12px;
+
+    transition: .35s ease;
+}
+
+.secondary-btn:hover {
+    color: white;
+
+    border-color:
+        rgba(255,255,255,.45);
+}
+
+
+/* =========================================================
+   HERO ORBIT
+========================================================= */
+
+.orbit {
+    position: absolute;
+
+    right: 9vw;
+    bottom: 13vh;
+
+    width: 250px;
+    height: 250px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    animation:
+        rotate 20s linear infinite;
+}
+
+.orbit::before {
+    content: "";
+
+    position: absolute;
+
+    width: 9px;
+    height: 9px;
+
+    top: 12px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 0 35px white;
+}
+
+.orbit::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 35px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-radius: 50%;
+}
+
+
+/* =========================================================
+   TRUST BAR
+========================================================= */
+
+.trust {
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+
+    padding: 26px 7vw;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.trust strong {
+    color: #aaa;
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   FEATURED COURSE
+========================================================= */
+
+.featured {
+    padding: 150px 7vw;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.section-label {
+    color: #666;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 25px;
+}
+
+.featured-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: end;
+
+    margin-bottom: 55px;
+}
+
+.featured-header h2 {
+    font-size:
+        clamp(
+            45px,
+            7vw,
+            85px
+        );
+
+    letter-spacing: -5px;
+
+    line-height: .9;
+}
+
+.featured-header p {
+    max-width: 330px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* COURSE CARD */
+
+.course-card {
+    position: relative;
+
+    min-height: 440px;
+
+    padding: 45px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.015)
+        );
+
+    transition: .45s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+
+    border-color:
+        rgba(255,255,255,.3);
+}
+
+.course-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+    height: 450px;
+
+    right: -150px;
+    top: -180px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.09),
+            transparent 65%
+        );
+}
+
+.course-top {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.course-number {
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 11px;
+}
+
+.course-status {
+    padding: 7px 11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    border-radius: 100px;
+
+    color: #999;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+.course-main {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 850px;
+}
+
+.course-main h3 {
+    font-size:
+        clamp(
+            38px,
+            6vw,
+            75px
+        );
+
+    line-height: .9;
+
+    letter-spacing: -4px;
+}
+
+.course-main h3 span {
+    color: #555;
+}
+
+.course-main p {
+    max-width: 600px;
+
+    color: #777;
+
+    margin-top: 22px;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+}
+
+.course-bottom {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: end;
+}
+
+.course-meta {
+    display: flex;
+
+    gap: 35px;
+}
+
+.meta-item small {
+    display: block;
+
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    margin-bottom: 6px;
+}
+
+.meta-item strong {
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   PLATFORM
+========================================================= */
+
+.platform {
+    padding: 150px 7vw;
+
+    background: #090909;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.platform h2 {
+    max-width: 850px;
+
+    font-size:
+        clamp(
+            45px,
+            7vw,
+            90px
+        );
+
+    line-height: .93;
+
+    letter-spacing: -5px;
+}
+
+.platform h2 span {
+    color: #555;
+}
+
+.platform-grid {
+    margin-top: 80px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 18px;
+}
+
+.platform-card {
+    min-height: 280px;
+
+    padding: 30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    transition: .35s ease;
+}
+
+.platform-card:hover {
+    transform: translateY(-7px);
+
+    border-color:
+        rgba(255,255,255,.3);
+}
+
+.platform-number {
+    color: #444;
+
+    font-family: monospace;
+
+    font-size: 11px;
+}
+
+.platform-card h3 {
+    font-size: 21px;
+
+    margin-bottom: 10px;
+}
+
+.platform-card p {
+    color: #707070;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   COURSE LIBRARY
+========================================================= */
+
+.library {
+    padding: 150px 7vw;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.library-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: end;
+
+    margin-bottom: 55px;
+}
+
+.library-header h2 {
+    font-size:
+        clamp(
+            45px,
+            7vw,
+            85px
+        );
+
+    letter-spacing: -5px;
+
+    line-height: .9;
+}
+
+.library-header p {
+    max-width: 320px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.library-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 18px;
+}
+
+.library-card {
+    min-height: 310px;
+
+    padding: 28px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    transition: .35s ease;
+}
+
+.library-card:hover {
+    border-color:
+        rgba(255,255,255,.3);
+
+    transform: translateY(-6px);
+}
+
+.library-card .tag {
+    color: #666;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+.library-card h3 {
+    font-size: 24px;
+
+    letter-spacing: -1px;
+}
+
+.library-card p {
+    color: #707070;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    margin-top: 9px;
+}
+
+.coming {
+    opacity: .55;
+}
+
+.card-link {
+    display: inline-block;
+
+    margin-top: 20px;
+
+    font-size: 11px;
+
+    color: #aaa;
+}
+
+.card-link:hover {
+    color: white;
+}
+
+
+/* =========================================================
+   PHILOSOPHY
+========================================================= */
+
+.philosophy {
+    padding: 150px 7vw;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.08);
+}
+
+.philosophy-inner {
+    max-width: 1000px;
+}
+
+.philosophy h2 {
+    font-size:
+        clamp(
+            48px,
+            7vw,
+            92px
+        );
+
+    line-height: .93;
+
+    letter-spacing: -6px;
+}
+
+.philosophy h2 span {
+    color: #555;
+}
+
+.philosophy p {
+    max-width: 570px;
+
+    margin-top: 40px;
+
+    color: #777;
+
+    line-height: 1.8;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   FINAL CTA
+========================================================= */
+
+.final-cta {
+    min-height: 75vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 100px 7vw;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.final-cta::before {
+    content: "";
+
+    position: absolute;
+
+    width: 650px;
+    height: 650px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.07),
+            transparent 65%
+        );
+
+    filter: blur(30px);
+}
+
+.final-content {
+    position: relative;
+
+    z-index: 2;
+}
+
+.final-content h2 {
+    font-size:
+        clamp(
+            60px,
+            10vw,
+            130px
+        );
+
+    line-height: .85;
+
+    letter-spacing: -8px;
+}
+
+.final-content h2 span {
+    color: #555;
+}
+
+.final-content p {
+    max-width: 500px;
+
+    margin: 30px auto;
+
+    color: #777;
+
+    line-height: 1.7;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    border-top:
+        1px solid
+        rgba(255,255,255,.1);
+
+    padding: 35px 7vw;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    color: #555;
+
+    font-family: monospace;
+
+    font-size: 10px;
+}
+
+.footer-links {
+    display: flex;
+
+    gap: 25px;
+}
+
+.footer-links a {
+    transition: .3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal {
+    opacity: 0;
+
+    transform:
+        translateY(30px);
+
+    transition:
+        opacity .8s ease,
+        transform .8s ease;
+}
+
+.reveal.show {
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(35px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+@keyframes rotate {
+
+    from {
+        transform:
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 850px) {
+
+    .navbar {
+        height: 70px;
+
+        padding: 0 6vw;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .login-link {
+        display: none;
+    }
+
+    .nav-button {
+        padding:
+            10px 14px;
+    }
+
+    .hero {
+        padding:
+            135px 6vw
+            90px;
+    }
+
+    .hero h1 {
+        font-size:
+            clamp(
+                62px,
+                18vw,
+                110px
+            );
+
+        letter-spacing:
+            -5px;
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .orbit {
+        width: 120px;
+        height: 120px;
+
+        right: 4vw;
+        bottom: 8vh;
+
+        opacity: .5;
+    }
+
+    .trust {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap: 18px;
+    }
+
+    .featured,
+    .platform,
+    .library,
+    .philosophy {
+        padding:
+            110px 6vw;
+    }
+
+    .featured-header,
+    .library-header {
+        display: block;
+    }
+
+    .featured-header p,
+    .library-header p {
+        margin-top: 20px;
+    }
+
+    .course-card {
+        min-height: 500px;
+
+        padding: 28px;
+    }
+
+    .course-main h3 {
+        font-size: 45px;
+
+        letter-spacing: -3px;
+    }
+
+    .course-bottom {
+        display: block;
+    }
+
+    .course-meta {
+        margin-bottom: 25px;
+
+        gap: 22px;
+    }
+
+    .platform-grid,
+    .library-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .platform-card,
+    .library-card {
+        min-height: 240px;
+    }
+
+    .philosophy h2 {
+        letter-spacing: -4px;
+    }
+
+    .final-content h2 {
+        letter-spacing: -5px;
+    }
+
+    footer {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+
+        padding:
+            30px 6vw;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media(max-width: 430px) {
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .nav-button {
+        font-size: 9px;
+    }
+
+    .hero h1 {
+        font-size: 64px;
+    }
+
+    .course-main h3 {
+        font-size: 39px;
+    }
+
+    .course-meta {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =======================================================
+     NAVIGATION
+======================================================= -->
+
+<nav class="navbar">
+
+    <a href="index.html" class="logo">
+        ACADEMY<span>.</span>
+    </a>
+
+
+    <div class="nav-links">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="courses.html">
+            Courses
+        </a>
+
+        <a href="pricing.html">
+            Pricing
+        </a>
+
+        <a href="about.html">
+            About
+        </a>
+
+    </div>
+
+
+    <div class="nav-actions">
+
+        <a href="login.html" class="login-link">
+            Login
+        </a>
+
+        <a href="courses.html" class="nav-button">
+            EXPLORE COURSES →
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =======================================================
+     HERO
+======================================================= -->
+
+<section class="hero">
+
+    <div class="hero-grid"></div>
+
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            ACADEMY. · PRACTICAL EDUCATION
+        </div>
+
+
+        <h1>
+            Learn.<br>
+            <span class="muted">
+                Build.
+            </span><br>
+            Become.
+        </h1>
+
+
+        <p class="hero-description">
+
+            Premium practical courses built to help you
+            develop valuable skills, build real projects
+            and turn knowledge into something real.
+
+        </p>
+
+
+        <div class="hero-actions">
+
+            <a
+                href="courses.html"
+                class="primary-btn"
+            >
+                EXPLORE COURSES →
+            </a>
+
+
+            <a
+                href="about.html"
+                class="secondary-btn"
+            >
+                WHY ACADEMY?
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="orbit"></div>
+
+</section>
+
+
+
+<!-- =======================================================
+     TRUST / PLATFORM STATS
+======================================================= -->
+
+<section class="trust">
+
+    <div>
+        <strong>01</strong>
+        PRACTICAL LEARNING
+    </div>
+
+    <div>
+        <strong>02</strong>
+        REAL PROJECTS
+    </div>
+
+    <div>
+        <strong>03</strong>
+        STRUCTURED COURSES
+    </div>
+
+    <div>
+        <strong>04</strong>
+        BUILT TO EVOLVE
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
+     FEATURED COURSE
+======================================================= -->
+
+<section class="featured">
+
+    <div class="featured-header">
+
+        <div>
+
+            <div class="section-label">
+                / 01 — FEATURED COURSE
+            </div>
+
+            <h2>
+                Start<br>
+                building.
+            </h2>
+
+        </div>
+
+
+        <p>
+
+            Your first step into the ACADEMY.
+            Start with the Agency Blueprint —
+            a complete system for understanding
+            and building a modern digital agency.
+
+        </p>
+
+    </div>
+
+
+
+    <a
+        href="lesson.html"
+        class="course-card reveal"
+    >
+
+        <div class="course-top">
+
+            <div class="course-number">
+                COURSE · 001
+            </div>
+
+            <div class="course-status">
+                AVAILABLE NOW
+            </div>
+
+        </div>
+
+
+        <div class="course-main">
+
+            <h3>
+                AGENCY<br>
+                <span>BLUEPRINT</span>
+            </h3>
+
+
+            <p>
+
+                Learn the fundamentals of agency
+                business models, positioning,
+                offers, client acquisition, sales,
+                delivery, AI, automation and scaling.
+
+            </p>
+
+        </div>
+
+
+        <div class="course-bottom">
+
+            <div class="course-meta">
+
+                <div class="meta-item">
+
+                    <small>
+                        LESSONS
+                    </small>
+
+                    <strong>
+                        25
+                    </strong>
+
+                </div>
+
+
+                <div class="meta-item">
+
+                    <small>
+                        LEVEL
+                    </small>
+
+                    <strong>
+                        Beginner → Advanced
+                    </strong>
+
+                </div>
+
+
+                <div class="meta-item">
+
+                    <small>
+                        FORMAT
+                    </small>
+
+                    <strong>
+                        Learn + Build
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <span class="primary-btn">
+                VIEW COURSE →
+            </span>
+
+        </div>
+
+    </a>
+
+</section>
+
+
+
+<!-- =======================================================
+     PLATFORM VALUE
+======================================================= -->
+
+<section class="platform">
+
+    <div class="section-label">
+        / 02 — THE ACADEMY SYSTEM
+    </div>
+
+
+    <h2>
+        Don't just consume
+        <span>information.</span>
+        Build something with it.
+    </h2>
+
+
+    <div class="platform-grid">
+
+
+        <div class="platform-card reveal">
+
+            <div class="platform-number">
+                01
+            </div>
+
+            <div>
+
+                <h3>
+                    Learn
+                </h3>
+
+                <p>
+
+                    Understand the strategy,
+                    frameworks and concepts
+                    behind each skill.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="platform-card reveal">
+
+            <div class="platform-number">
+                02
+            </div>
+
+            <div>
+
+                <h3>
+                    Build
+                </h3>
+
+                <p>
+
+                    Turn every lesson into
+                    an actual project, system
+                    or useful asset.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="platform-card reveal">
+
+            <div class="platform-number">
+                03
+            </div>
+
+            <div>
+
+                <h3>
+                    Become
+                </h3>
+
+                <p>
+
+                    Build a portfolio of real
+                    work and develop skills
+                    you can actually use.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
+     COURSE LIBRARY
+======================================================= -->
+
+<section class="library">
+
+    <div class="library-header">
+
+        <div>
+
+            <div class="section-label">
+                / 03 — COURSE LIBRARY
+            </div>
+
+            <h2>
+                More<br>
+                coming.
+            </h2>
+
+        </div>
+
+
+        <p>
+
+            ACADEMY. is designed to grow.
+            New practical courses will be added
+            as the platform evolves.
+
+        </p>
+
+    </div>
+
+
+
+    <div class="library-grid">
+
+
+        <!-- COURSE 001 -->
+
+        <div class="library-card reveal">
+
+            <div class="tag">
+                001 · BUSINESS
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Agency Blueprint
+                </h3>
+
+                <p>
+
+                    Build a modern digital
+                    agency from zero.
+
+                </p>
+
+
+                <a
+                    href="lesson.html"
+                    class="card-link"
+                >
+                    OPEN COURSE →
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COURSE 002 -->
+
+        <div class="library-card coming reveal">
+
+            <div class="tag">
+                002 · AI
+            </div>
+
+
+            <div>
+
+                <h3>
+                    AI Mastery
+                </h3>
+
+                <p>
+
+                    Learn how to use AI to
+                    work, create and automate.
+
+                </p>
+
+
+                <span class="card-link">
+                    COMING SOON
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COURSE 003 -->
+
+        <div class="library-card coming reveal">
+
+            <div class="tag">
+                003 · DESIGN
+            </div>
+
+
+            <div>
+
+                <h3>
+                    Web Design Pro
+                </h3>
+
+                <p>
+
+                    Learn modern web design,
+                    development and creative direction.
+
+                </p>
+
+
+                <span class="card-link">
+                    COMING SOON
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
+     PHILOSOPHY
+======================================================= -->
+
+<section class="philosophy">
+
+    <div class="philosophy-inner">
+
+        <div class="section-label">
+            / 04 — PHILOSOPHY
+        </div>
+
+
+        <h2>
+
+            Education should
+            create <span>momentum.</span>
+
+        </h2>
+
+
+        <p>
+
+            ACADEMY. isn't designed around endless
+            hours of passive watching. The goal is simple:
+            learn something useful, apply it, build something
+            real and move to the next level.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
+     FINAL CTA
+======================================================= -->
+
+<section class="final-cta">
+
+    <div class="final-content">
+
+        <div class="section-label">
+            / 05 — YOUR NEXT STEP
+        </div>
+
+
+        <h2>
+
+            Start.<br>
+            <span>building.</span>
+
+        </h2>
+
+
+        <p>
+
+            Explore the course library and find
+            the skill you want to build next.
+
+        </p>
+
+
+        <a
+            href="courses.html"
+            class="primary-btn"
+        >
+            EXPLORE ACADEMY →
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- =======================================================
+     FOOTER
+======================================================= -->
+
+<footer>
+
+    <div>
+        © 2026 ACADEMY.
+    </div>
+
+
+    <div class="footer-links">
+
+        <a href="courses.html">
+            Courses
+        </a>
+
+        <a href="pricing.html">
+            Pricing
+        </a>
+
+        <a href="about.html">
+            About
+        </a>
+
+        <a href="login.html">
+            Login
+        </a>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =======================================================
+     JAVASCRIPT
+======================================================= -->
+
+<script>
+
+const revealElements =
+    document.querySelectorAll(".reveal");
+
+
+const observer =
+    new IntersectionObserver(
+
+        (entries) => {
+
+            entries.forEach(
+                (entry) => {
+
+                    if (
+                        entry.isIntersecting
+                    ) {
+
+                        entry.target.classList.add(
+                            "show"
+                        );
+
+                        observer.unobserve(
+                            entry.target
+                        );
+
+                    }
+
+                }
+            );
+
+        },
+
+        {
+            threshold: 0.12
+        }
+
+    );
+
+
+revealElements.forEach(
+    (element) => {
+
+        observer.observe(element);
+
+    }
+);
+
+</script>
+
+
+</body>
+</html>

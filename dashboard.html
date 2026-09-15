@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard — ACADEMY</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#070707;
+    color:#fff;
+    font-family:Inter,Arial,sans-serif;
+    min-height:100vh;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+#loadingScreen{
+    position:fixed;
+    inset:0;
+    background:#070707;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    transition:.4s;
+}
+
+.loadingText{
+    color:#555;
+    font-size:10px;
+    letter-spacing:5px;
+    animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+    50%{
+        opacity:.35;
+    }
+}
+
+#loadingScreen.hide{
+    opacity:0;
+    pointer-events:none;
+}
+
+/* =========================
+   NAV
+========================= */
+
+nav{
+    height:76px;
+    padding:0 5%;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(7,7,7,.82);
+    backdrop-filter:blur(20px);
+}
+
+.logo{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.nav-right a{
+    color:#777;
+    font-size:12px;
+    transition:.3s;
+}
+
+.nav-right a:hover{
+    color:#fff;
+}
+
+.avatar{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#fff;
+    color:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout{
+    display:grid;
+    grid-template-columns:230px 1fr;
+    min-height:calc(100vh - 76px);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    border-right:1px solid rgba(255,255,255,.08);
+    padding:35px 22px;
+}
+
+.sidebar-label{
+    color:#444;
+    font-size:9px;
+    letter-spacing:3px;
+    margin:0 12px 15px;
+}
+
+.side-link{
+    display:block;
+    width:100%;
+    padding:13px 12px;
+    border-radius:9px;
+    color:#777;
+    font-size:12px;
+    margin-bottom:4px;
+    transition:.3s;
+    border:0;
+    background:transparent;
+    text-align:left;
+    cursor:pointer;
+}
+
+.side-link:hover,
+.side-link.active{
+    color:#fff;
+    background:#111;
+}
+
+.side-bottom{
+    margin-top:45px;
+    padding-top:25px;
+    border-top:1px solid rgba(255,255,255,.07);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+    padding:55px 6%;
+    max-width:1450px;
+    width:100%;
+}
+
+.welcome{
+    margin-bottom:50px;
+}
+
+.eyebrow{
+    color:#555;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-bottom:16px;
+}
+
+h1{
+    font-size:clamp(38px,5vw,65px);
+    letter-spacing:-4px;
+    line-height:1;
+}
+
+.welcome p{
+    color:#666;
+    margin-top:15px;
+    font-size:14px;
+}
+
+.email{
+    color:#444;
+    font-size:11px;
+    margin-top:9px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin-bottom:55px;
+}
+
+.stat{
+    padding:25px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    background:#0b0b0b;
+    transition:.3s;
+}
+
+.stat:hover{
+    border-color:rgba(255,255,255,.18);
+    transform:translateY(-2px);
+}
+
+.stat-label{
+    color:#555;
+    font-size:10px;
+    letter-spacing:1px;
+}
+
+.stat-number{
+    margin-top:13px;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:-2px;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section-head{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    margin-bottom:22px;
+}
+
+.section-head h2{
+    font-size:22px;
+    letter-spacing:-1px;
+}
+
+.section-head a{
+    color:#666;
+    font-size:11px;
+    transition:.3s;
+}
+
+.section-head a:hover{
+    color:#fff;
+}
+
+/* =========================
+   COURSE
+========================= */
+
+.course{
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:22px;
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(255,255,255,.08),
+            transparent 35%
+        ),
+        #0b0b0b;
+
+    padding:30px;
+
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:30px;
+
+    transition:.4s;
+}
+
+.course:hover{
+    border-color:rgba(255,255,255,.22);
+    transform:translateY(-3px);
+}
+
+.course-tag{
+    display:inline-block;
+    font-size:9px;
+    letter-spacing:2px;
+    color:#777;
+    padding:7px 10px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:100px;
+}
+
+.course h3{
+    font-size:30px;
+    letter-spacing:-2px;
+    margin-top:22px;
+}
+
+.course-description{
+    color:#777;
+    font-size:13px;
+    line-height:1.7;
+    max-width:600px;
+    margin-top:10px;
+}
+
+.progress-area{
+    margin-top:28px;
+    max-width:600px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    color:#666;
+    font-size:10px;
+    margin-bottom:9px;
+}
+
+.progress{
+    height:5px;
+    background:#1a1a1a;
+    border-radius:100px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:#fff;
+    border-radius:100px;
+    transition:width .8s ease;
+}
+
+.continue{
+    align-self:center;
+    padding:14px 22px;
+    border-radius:100px;
+    background:#fff;
+    color:#000;
+    font-size:11px;
+    font-weight:800;
+    white-space:nowrap;
+    transition:.3s;
+}
+
+.continue:hover{
+    transform:scale(1.04);
+}
+
+/* =========================
+   COURSE STATUS
+========================= */
+
+.course-status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-top:15px;
+    color:#555;
+    font-size:10px;
+}
+
+.status-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#555;
+}
+
+.status-dot.unlocked{
+    background:#fff;
+}
+
+/* =========================
+   UPCOMING
+========================= */
+
+.upcoming{
+    margin-top:60px;
+}
+
+.locked-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.locked{
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:16px;
+    padding:25px;
+    background:#0a0a0a;
+    opacity:.65;
+}
+
+.locked-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.locked-number{
+    color:#444;
+    font-size:11px;
+}
+
+.lock{
+    font-size:13px;
+    color:#555;
+}
+
+.locked h3{
+    margin-top:35px;
+    font-size:19px;
+    letter-spacing:-1px;
+}
+
+.locked p{
+    color:#555;
+    font-size:11px;
+    line-height:1.6;
+    margin-top:9px;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error-box{
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    border:1px solid rgba(255,80,80,.2);
+    background:rgba(255,50,50,.05);
+    border-radius:12px;
+    color:#ff8585;
+    font-size:12px;
+}
+
+.error-box.show{
+    display:block;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    main{
+        padding:40px 5%;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .course{
+        grid-template-columns:1fr;
+    }
+
+    .continue{
+        width:max-content;
+    }
+
+    .locked-grid{
+        grid-template-columns:1fr;
+    }
+
+    .nav-right a{
+        display:none;
+    }
+}
+
+@media(max-width:500px){
+
+    h1{
+        letter-spacing:-3px;
+    }
+
+    .course{
+        padding:23px;
+    }
+
+    .course h3{
+        font-size:25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADING -->
+
+<div id="loadingScreen">
+    <div class="loadingText">
+        ACADEMY
+    </div>
+</div>
+
+
+<!-- NAV -->
+
+<nav>
+
+    <a href="index.html" class="logo">
+        ACADEMY.
+    </a>
+
+    <div class="nav-right">
+
+        <a href="courses.html">
+            Explore Courses
+        </a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <div class="avatar" id="avatar">
+            A
+        </div>
+
+    </div>
+
+</nav>
+
+
+<div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-label">
+            MENU
+        </div>
+
+        <a
+            href="dashboard.html"
+            class="side-link active">
+            Dashboard
+        </a>
+
+        <a
+            href="courses.html"
+            class="side-link">
+            Course Library
+        </a>
+
+        <a
+            href="#progress"
+            class="side-link">
+            My Progress
+        </a>
+
+        <a
+            href="#resources"
+            class="side-link">
+            Resources
+        </a>
+
+
+        <div class="side-bottom">
+
+            <div class="sidebar-label">
+                ACCOUNT
+            </div>
+
+            <a
+                href="#profile"
+                class="side-link">
+                Profile
+            </a>
+
+            <a
+                href="#settings"
+                class="side-link">
+                Settings
+            </a>
+
+            <button
+                id="logoutButton"
+                class="side-link">
+                Log out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome">
+
+            <div class="eyebrow">
+                STUDENT DASHBOARD
+            </div>
+
+            <h1 id="welcomeTitle">
+                Welcome back.
+            </h1>
+
+            <p>
+                Keep building. Keep moving.
+            </p>
+
+            <div
+                class="email"
+                id="studentEmail">
+                Loading account...
+            </div>
+
+        </section>
+
+
+        <!-- STATS -->
+
+        <section class="stats">
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    COURSES
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="courseCount">
+                    00
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    COMPLETION
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="completion">
+                    0%
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    LESSONS COMPLETED
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="lessonsCompleted">
+                    00
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- COURSE -->
+
+        <section id="progress">
+
+            <div class="section-head">
+
+                <h2>
+                    Continue learning
+                </h2>
+
+                <a href="courses.html">
+                    View all →
+                </a>
+
+            </div>
+
+
+            <div class="course">
+
+                <div>
+
+                    <span class="course-tag">
+                        BUSINESS · ADVANCED
+                    </span>
+
+                    <h3>
+                        AGENCY BLUEPRINT
+                    </h3>
+
+                    <p class="course-description">
+                        Build a digital agency from zero —
+                        from positioning and offers to
+                        client acquisition, sales, delivery,
+                        automation and scale.
+                    </p>
+
+
+                    <div class="course-status">
+
+                        <span
+                            class="status-dot"
+                            id="statusDot">
+                        </span>
+
+                        <span id="courseStatus">
+                            Checking access...
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-area">
+
+                        <div class="progress-info">
+
+                            <span id="progressText">
+                                0 of 25 lessons
+                            </span>
+
+                            <span id="progressPercent">
+                                0%
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+
+                            <div
+                                class="progress-bar"
+                                id="progressBar">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="lesson.html"
+                    class="continue"
+                    id="continueButton">
+
+                    OPEN COURSE →
+
+                </a>
+
+            </div>
+
+
+            <div
+                class="error-box"
+                id="errorBox">
+            </div>
+
+        </section>
+
+
+        <!-- UPCOMING -->
+
+        <section
+            class="upcoming"
+            id="resources">
+
+            <div class="section-head">
+
+                <h2>
+                    Coming to the platform
+                </h2>
+
+                <a href="courses.html">
+                    Explore →
+                </a>
+
+            </div>
+
+
+            <div class="locked-grid">
+
+
+                <div class="locked">
+
+                    <div class="locked-top">
+
+                        <span class="locked-number">
+                            COURSE 02
+                        </span>
+
+                        <span class="lock">
+                            🔒
+                        </span>
+
+                    </div>
+
+                    <h3>
+                        AI MASTERY
+                    </h3>
+
+                    <p>
+                        Learn how to use AI as a serious
+                        productivity and business tool.
+                    </p>
+
+                </div>
+
+
+                <div class="locked">
+
+                    <div class="locked-top">
+
+                        <span class="locked-number">
+                            COURSE 03
+                        </span>
+
+                        <span class="lock">
+                            🔒
+                        </span>
+
+                    </div>
+
+                    <h3>
+                        WEB DESIGN PRO
+                    </h3>
+
+                    <p>
+                        Build premium websites,
+                        interfaces and digital experiences.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   SUPABASE CONFIG
+========================================== */
+
+const SUPABASE_URL =
+"https://jbhpkkwpdsyjbgizqtqf.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_odgH5ZbkfIhTPSfJO6ubcA_RAXUWYIA";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* ==========================================
+   COURSE SETTINGS
+========================================== */
+
+const COURSE_SLUG =
+"agency-blueprint";
+
+const TOTAL_LESSONS =
+25;
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const loadingScreen =
+document.getElementById("loadingScreen");
+
+const welcomeTitle =
+document.getElementById("welcomeTitle");
+
+const studentEmail =
+document.getElementById("studentEmail");
+
+const avatar =
+document.getElementById("avatar");
+
+const courseCount =
+document.getElementById("courseCount");
+
+const completion =
+document.getElementById("completion");
+
+const lessonsCompleted =
+document.getElementById("lessonsCompleted");
+
+const progressText =
+document.getElementById("progressText");
+
+const progressPercent =
+document.getElementById("progressPercent");
+
+const progressBar =
+document.getElementById("progressBar");
+
+const continueButton =
+document.getElementById("continueButton");
+
+const courseStatus =
+document.getElementById("courseStatus");
+
+const statusDot =
+document.getElementById("statusDot");
+
+const logoutButton =
+document.getElementById("logoutButton");
+
+const errorBox =
+document.getElementById("errorBox");
+
+
+/* ==========================================
+   ERROR DISPLAY
+========================================== */
+
+function showError(message){
+
+    errorBox.textContent =
+        message;
+
+    errorBox.classList.add(
+        "show"
+    );
+
+}
+
+
+/* ==========================================
+   LOAD DASHBOARD
+========================================== */
+
+async function loadDashboard(){
+
+    try{
+
+        /* ==============================
+           CHECK AUTHENTICATION
+        ============================== */
+
+        const {
+            data: {
+                user
+            },
+            error: userError
+        } =
+        await supabaseClient.auth.getUser();
+
+
+        if(userError){
+
+            throw userError;
+
+        }
+
+
+        if(!user){
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        /* ==============================
+           USER INFORMATION
+        ============================== */
+
+        const name =
+            user.user_metadata?.full_name
+            ||
+            user.email?.split("@")[0]
+            ||
+            "Student";
+
+
+        welcomeTitle.textContent =
+            `Welcome back, ${name}.`;
+
+
+        studentEmail.textContent =
+            user.email || "";
+
+
+        avatar.textContent =
+            name
+                .charAt(0)
+                .toUpperCase();
+
+
+        /* ==============================
+           GET COURSE
+        ============================== */
+
+        const {
+            data: course,
+            error: courseError
+        } =
+        await supabaseClient
+            .from("courses")
+            .select("*")
+            .eq("slug", COURSE_SLUG)
+            .single();
+
+
+        if(courseError){
+
+            throw courseError;
+
+        }
+
+
+        /* ==============================
+           GET PURCHASES
+        ============================== */
+
+        const {
+            data: purchases,
+            error: purchaseError
+        } =
+        await supabaseClient
+            .from("purchases")
+            .select(
+                "course_id,status"
+            )
+            .eq(
+                "user_id",
+                user.id
+            )
+            .eq(
+                "status",
+                "completed"
+            );
+
+
+        if(purchaseError){
+
+            throw purchaseError;
+
+        }
+
+
+        const ownedCourses =
+            purchases || [];
+
+
+        /* ==============================
+           COURSE COUNT
+        ============================== */
+
+        courseCount.textContent =
+            String(
+                ownedCourses.length
+            ).padStart(2,"0");
+
+
+        /* ==============================
+           CHECK AGENCY ACCESS
+        ============================== */
+
+        const hasAccess =
+            ownedCourses.some(
+                purchase =>
+                    Number(
+                        purchase.course_id
+                    ) === Number(course.id)
+            );
+
+
+        if(hasAccess){
+
+            courseStatus.textContent =
+                "COURSE UNLOCKED";
+
+            statusDot.classList.add(
+                "unlocked"
+            );
+
+        }else{
+
+            courseStatus.textContent =
+                "NOT PURCHASED";
+
+            continueButton.textContent =
+                "VIEW COURSE →";
+
+            continueButton.href =
+                "courses.html";
+
+        }
+
+
+        /* ==============================
+           GET PROGRESS
+        ============================== */
+
+        const {
+            data: progress,
+            error: progressError
+        } =
+        await supabaseClient
+            .from("progress")
+            .select(
+                "lesson_number,completed"
+            )
+            .eq(
+                "user_id",
+                user.id
+            )
+            .eq(
+                "course_id",
+                course.id
+            )
+            .eq(
+                "completed",
+                true
+            );
+
+
+        if(progressError){
+
+            throw progressError;
+
+        }
+
+
+        const completedCount =
+            progress?.length || 0;
+
+
+        /* ==============================
+           CALCULATE PROGRESS
+        ============================== */
+
+        const percent =
+            Math.min(
+                100,
+                Math.round(
+                    (
+                        completedCount /
+                        TOTAL_LESSONS
+                    ) * 100
+                )
+            );
+
+
+        /* ==============================
+           UPDATE PROGRESS
+        ============================== */
+
+        lessonsCompleted.textContent =
+            String(
+                completedCount
+            ).padStart(2,"0");
+
+
+        completion.textContent =
+            percent + "%";
+
+
+        progressText.textContent =
+            `${completedCount} of ${TOTAL_LESSONS} lessons`;
+
+
+        progressPercent.textContent =
+            percent + "%";
+
+
+        progressBar.style.width =
+            percent + "%";
+
+
+        /* ==============================
+           BUTTON TEXT
+        ============================== */
+
+        if(hasAccess){
+
+            if(completedCount === 0){
+
+                continueButton.textContent =
+                    "START COURSE →";
+
+            }else if(
+                completedCount >= TOTAL_LESSONS
+            ){
+
+                continueButton.textContent =
+                    "COURSE COMPLETE →";
+
+            }else{
+
+                continueButton.textContent =
+                    "CONTINUE →";
+
+            }
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+        showError(
+            "We couldn't load your dashboard. Please refresh the page."
+        );
+
+    }finally{
+
+        setTimeout(() => {
+
+            loadingScreen.classList.add(
+                "hide"
+            );
+
+        },300);
+
+    }
+
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+logoutButton.addEventListener(
+    "click",
+    async function(){
+
+        logoutButton.disabled =
+            true;
+
+        logoutButton.textContent =
+            "Logging out...";
+
+
+        const {
+            error
+        } =
+        await supabaseClient.auth.signOut();
+
+
+        if(error){
+
+            console.error(error);
+
+            logoutButton.disabled =
+                false;
+
+            logoutButton.textContent =
+                "Log out";
+
+            showError(
+                "Logout failed. Please try again."
+            );
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "login.html";
+
+    }
+);
+
+
+/* ==========================================
+   AUTH STATE
+========================================== */
+
+supabaseClient.auth.onAuthStateChange(
+    (event) => {
+
+        if(event === "SIGNED_OUT"){
+
+            window.location.href =
+                "login.html";
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   START
+========================================== */
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>

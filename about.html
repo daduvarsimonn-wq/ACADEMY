@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Academy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+html{
+    scroll-behavior:smooth;
+}
+body{
+    background:#070707;
+    color:#fff;
+    font-family:Inter,Arial,sans-serif;
+    overflow-x:hidden;
+}
+a{
+    color:inherit;
+    text-decoration:none;
+}
+nav{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:80px;
+    padding:0 7%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:1000;
+    background:rgba(7,7,7,.72);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+.logo{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+.nav-links{
+    display:flex;
+    gap:30px;
+    color:#888;
+    font-size:13px;
+}
+.nav-links a{
+    transition:.3s;
+}
+.nav-links a:hover{
+    color:#fff;
+}
+.login{
+    padding:11px 18px;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:100px;
+    font-size:13px;
+}
+.hero{
+    min-height:90vh;
+    padding:180px 7% 100px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+}
+.hero::before{
+    content:"";
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:rgba(255,255,255,.055);
+    filter:blur(140px);
+    right:-180px;
+    top:100px;
+}
+.hero-content{
+    position:relative;
+    z-index:2;
+    max-width:1000px;
+}
+.eyebrow{
+    color:#777;
+    font-size:11px;
+    letter-spacing:4px;
+    margin-bottom:28px;
+}
+h1{
+    font-size:clamp(55px,9vw,125px);
+    line-height:.88;
+    letter-spacing:-7px;
+    font-weight:900;
+}
+.hero p{
+    margin-top:38px;
+    max-width:650px;
+    color:#888;
+    font-size:18px;
+    line-height:1.7;
+}
+.story{
+    padding:100px 7% 150px;
+    border-top:1px solid rgba(255,255,255,.08);
+}
+.story-grid{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:100px;
+}
+.label{
+    color:#666;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:25px;
+}
+.story h2{
+    font-size:clamp(38px,5vw,65px);
+    line-height:1;
+    letter-spacing:-3px;
+}
+.story-text{
+    color:#888;
+    font-size:16px;
+    line-height:1.9;
+}
+.story-text p + p{
+    margin-top:25px;
+}
+.values{
+    padding:120px 7%;
+    background:#0b0b0b;
+    border-top:1px solid rgba(255,255,255,.06);
+    border-bottom:1px solid rgba(255,255,255,.06);
+}
+.values-head{
+    max-width:1200px;
+    margin:auto;
+    margin-bottom:55px;
+}
+.values-head h2{
+    font-size:clamp(42px,6vw,75px);
+    letter-spacing:-4px;
+}
+.values-grid{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+.value{
+    min-height:300px;
+    padding:30px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:22px;
+    background:#080808;
+    transition:.4s;
+}
+.value:hover{
+    transform:translateY(-7px);
+    border-color:rgba(255,255,255,.25);
+}
+.value-number{
+    color:#555;
+    font-size:12px;
+}
+.value h3{
+    margin-top:80px;
+    font-size:27px;
+    letter-spacing:-1px;
+}
+.value p{
+    color:#777;
+    line-height:1.7;
+    font-size:13px;
+    margin-top:15px;
+}
+.manifesto{
+    padding:150px 7%;
+    text-align:center;
+}
+.manifesto .label{
+    margin-bottom:30px;
+}
+.manifesto h2{
+    max-width:1050px;
+    margin:auto;
+    font-size:clamp(42px,7vw,90px);
+    line-height:.95;
+    letter-spacing:-5px;
+}
+.manifesto p{
+    max-width:600px;
+    margin:35px auto 0;
+    color:#777;
+    line-height:1.7;
+}
+.cta{
+    margin:0 7% 120px;
+    padding:90px 30px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:30px;
+    background:linear-gradient(145deg,#151515,#080808);
+}
+.cta h2{
+    font-size:clamp(40px,6vw,75px);
+    letter-spacing:-4px;
+}
+.cta p{
+    color:#777;
+    margin:20px auto 30px;
+    max-width:500px;
+}
+.cta a{
+    display:inline-block;
+    padding:15px 25px;
+    border-radius:100px;
+    background:#fff;
+    color:#000;
+    font-size:13px;
+    font-weight:700;
+}
+footer{
+    padding:35px 7%;
+    border-top:1px solid rgba(255,255,255,.08);
+    display:flex;
+    justify-content:space-between;
+    color:#555;
+    font-size:12px;
+}
+@media(max-width:800px){
+    .nav-links{
+        display:none;
+    }
+    .hero{
+        min-height:80vh;
+        padding:145px 6% 80px;
+    }
+    h1{
+        letter-spacing:-4px;
+    }
+    .hero p{
+        font-size:16px;
+    }
+    .story{
+        padding:80px 6% 100px;
+    }
+    .story-grid{
+        grid-template-columns:1fr;
+        gap:50px;
+    }
+    .values{
+        padding:90px 6%;
+    }
+    .values-grid{
+        grid-template-columns:1fr;
+    }
+    .manifesto{
+        padding:100px 6%;
+    }
+    .manifesto h2{
+        letter-spacing:-3px;
+    }
+    .cta{
+        margin:0 6% 80px;
+        padding:65px 20px;
+    }
+    footer{
+        padding:30px 6%;
+        flex-direction:column;
+        gap:10px;
+    }
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="index.html" class="logo">ACADEMY.</a>
+<div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+</div>
+<a href="login.html" class="login">Login</a>
+</nav>
+<section class="hero">
+<div class="hero-content">
+    <div class="eyebrow">ABOUT THE PLATFORM</div>
+    <h1>Learn.<br>Build.<br>Become.</h1>
+    <p>
+        We are building a different kind of learning platform —
+        focused on real skills, real projects and the ability
+        to turn knowledge into something useful.
+    </p>
+</div>
+</section>
+<section class="story">
+<div class="story-grid">
+    <div>
+        <div class="label">01 / THE IDEA</div>
+        <h2>
+            Courses shouldn't
+            end when the video ends.
+        </h2>
+    </div>
+    <div class="story-text">
+        <p>
+            Most online courses are designed around watching.
+            We believe learning should be designed around doing.
+        </p>
+        <p>
+            Every course on this platform is built to move you
+            from theory into execution — with projects, systems,
+            resources and practical challenges.
+        </p>
+        <p>
+            The goal isn't to collect certificates.
+            The goal is to leave with a skill you can actually use.
+        </p>
+    </div>
+</div>
+</section>
+<section class="values">
+<div class="values-head">
+    <div class="label">02 / OUR PRINCIPLES</div>
+    <h2>Built around action.</h2>
+</div>
+<div class="values-grid">
+    <div class="value">
+        <div class="value-number">01</div>
+        <h3>Practical</h3>
+        <p>
+            Learn concepts by actually applying them
+            to projects and real-world situations.
+        </p>
+    </div>
+    <div class="value">
+        <div class="value-number">02</div>
+        <h3>Deep</h3>
+        <p>
+            We don't want surface-level tutorials.
+            Courses should teach the systems behind the skill.
+        </p>
+    </div>
+    <div class="value">
+        <div class="value-number">03</div>
+        <h3>Built to evolve</h3>
+        <p>
+            New courses, lessons and resources can be
+            added as the platform grows.
+        </p>
+    </div>
+</div>
+</section>
+<section class="manifesto">
+<div class="label">03 / THE MISSION</div>
+<h2>
+    Don't just consume information.
+    <br>
+    Build something with it.
+</h2>
+<p>
+    The platform will grow into a library of serious,
+    practical courses covering business, technology,
+    design, AI and other valuable skills.
+</p>
+</section>
+<section class="cta">
+<h2>Ready to start?</h2>
+<p>
+    Explore the course library and choose your first skill.
+</p>
+<a href="courses.html">Explore Courses →</a>
+</section>
+<footer>
+<span>© 2026 ACADEMY.</span>
+<span>Learn. Build. Scale.</span>
+</footer>
+</body>
+</html>

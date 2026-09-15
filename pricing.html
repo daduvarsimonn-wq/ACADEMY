@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Academy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    background:#070707;
+    color:#fff;
+    font-family:Inter,Arial,sans-serif;
+    overflow-x:hidden;
+}
+a{
+    color:inherit;
+    text-decoration:none;
+}
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    height:80px;
+    padding:0 7%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:100;
+    background:rgba(7,7,7,.75);
+    backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+.logo{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-1px;
+}
+.nav-links{
+    display:flex;
+    gap:30px;
+    color:#888;
+    font-size:13px;
+}
+.nav-links a:hover{
+    color:#fff;
+}
+.login{
+    padding:11px 18px;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:100px;
+    font-size:13px;
+}
+.hero{
+    padding:170px 7% 90px;
+    text-align:center;
+    position:relative;
+}
+.hero::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    border-radius:50%;
+    background:rgba(255,255,255,.06);
+    filter:blur(130px);
+    left:50%;
+    top:50px;
+    transform:translateX(-50%);
+}
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+.eyebrow{
+    color:#777;
+    font-size:11px;
+    letter-spacing:4px;
+    margin-bottom:25px;
+}
+h1{
+    font-size:clamp(55px,9vw,110px);
+    line-height:.9;
+    letter-spacing:-6px;
+    font-weight:900;
+}
+.hero p{
+    max-width:550px;
+    margin:30px auto 0;
+    color:#888;
+    line-height:1.7;
+    font-size:16px;
+}
+.pricing{
+    padding:30px 7% 130px;
+}
+.grid{
+    max-width:1150px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+.plan{
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:25px;
+    padding:35px;
+    background:linear-gradient(145deg,#111,#080808);
+    min-height:530px;
+    display:flex;
+    flex-direction:column;
+    transition:.4s;
+}
+.plan:hover{
+    transform:translateY(-8px);
+    border-color:rgba(255,255,255,.3);
+}
+.plan.featured{
+    border-color:rgba(255,255,255,.35);
+    background:linear-gradient(145deg,#181818,#090909);
+    transform:scale(1.03);
+}
+.plan.featured:hover{
+    transform:scale(1.03) translateY(-8px);
+}
+.tag{
+    display:inline-block;
+    width:max-content;
+    padding:7px 11px;
+    border-radius:100px;
+    background:#fff;
+    color:#000;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:1px;
+    margin-bottom:25px;
+}
+.plan-name{
+    color:#777;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+}
+.price{
+    margin-top:20px;
+    font-size:45px;
+    font-weight:800;
+    letter-spacing:-2px;
+}
+.price span{
+    color:#666;
+    font-size:13px;
+    font-weight:400;
+    letter-spacing:0;
+}
+.description{
+    color:#888;
+    font-size:13px;
+    line-height:1.6;
+    margin:20px 0 30px;
+}
+.features{
+    list-style:none;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:25px;
+}
+.features li{
+    color:#aaa;
+    font-size:13px;
+    margin-bottom:15px;
+}
+.features li::before{
+    content:"✓";
+    color:#fff;
+    margin-right:10px;
+}
+.button{
+    margin-top:auto;
+    display:block;
+    text-align:center;
+    padding:15px;
+    border-radius:100px;
+    border:1px solid rgba(255,255,255,.15);
+    font-size:13px;
+    font-weight:700;
+    transition:.3s;
+}
+.button:hover{
+    background:#fff;
+    color:#000;
+}
+.featured .button{
+    background:#fff;
+    color:#000;
+}
+.note{
+    text-align:center;
+    color:#555;
+    font-size:12px;
+    margin-top:30px;
+}
+.faq{
+    max-width:850px;
+    margin:0 auto 130px;
+    padding:0 7%;
+}
+.faq h2{
+    text-align:center;
+    font-size:45px;
+    letter-spacing:-2px;
+    margin-bottom:45px;
+}
+.question{
+    border-top:1px solid rgba(255,255,255,.1);
+    padding:25px 0;
+    display:flex;
+    justify-content:space-between;
+    gap:30px;
+}
+.question strong{
+    font-size:14px;
+}
+.question p{
+    color:#777;
+    font-size:13px;
+    line-height:1.6;
+    max-width:450px;
+    text-align:right;
+}
+footer{
+    border-top:1px solid rgba(255,255,255,.08);
+    padding:35px 7%;
+    display:flex;
+    justify-content:space-between;
+    color:#555;
+    font-size:12px;
+}
+@media(max-width:800px){
+    .nav-links{
+        display:none;
+    }
+    .hero{
+        padding:140px 6% 70px;
+    }
+    h1{
+        letter-spacing:-4px;
+    }
+    .pricing{
+        padding:20px 6% 90px;
+    }
+    .grid{
+        grid-template-columns:1fr;
+    }
+    .plan.featured{
+        transform:none;
+    }
+    .plan.featured:hover{
+        transform:translateY(-8px);
+    }
+    .faq{
+        padding:0 6%;
+    }
+    .question{
+        display:block;
+    }
+    .question p{
+        text-align:left;
+        margin-top:10px;
+    }
+    footer{
+        padding:30px 6%;
+        flex-direction:column;
+        gap:10px;
+    }
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="index.html" class="logo">ACADEMY.</a>
+<div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="courses.html">Courses</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+</div>
+<a href="login.html" class="login">Login</a>
+</nav>
+<section class="hero">
+<div class="hero-content">
+    <div class="eyebrow">SIMPLE PRICING</div>
+    <h1>Invest in<br>your skills.</h1>
+    <p>
+        Choose the level that fits you.
+        Start with one course or unlock the
+        entire learning library.
+    </p>
+</div>
+</section>
+<section class="pricing">
+<div class="grid">
+    <!-- SINGLE COURSE -->
+    <div class="plan">
+        <div class="plan-name">Single Course</div>
+        <div class="price">
+            $49
+        </div>
+        <div class="description">
+            Get lifetime access to one course
+            and learn at your own pace.
+        </div>
+        <ul class="features">
+            <li>Full course access</li>
+            <li>All lessons</li>
+            <li>Course resources</li>
+            <li>Lifetime access</li>
+            <li>Future course updates</li>
+        </ul>
+        <a href="courses.html" class="button">
+            Choose Course →
+        </a>
+    </div>
+    <!-- MEMBERSHIP -->
+    <div class="plan featured">
+        <div class="tag">MOST POPULAR</div>
+        <div class="plan-name">All Access</div>
+        <div class="price">
+            $99 <span>/ year</span>
+        </div>
+        <div class="description">
+            Unlock every current and future
+            course from one membership.
+        </div>
+        <ul class="features">
+            <li>Every course</li>
+            <li>Future courses included</li>
+            <li>All templates & resources</li>
+            <li>Student dashboard</li>
+            <li>Progress tracking</li>
+            <li>Member-only content</li>
+        </ul>
+        <a href="login.html" class="button">
+            Get All Access →
+        </a>
+    </div>
+    <!-- FUTURE -->
+    <div class="plan">
+        <div class="plan-name">Pro</div>
+        <div class="price">
+            $199 <span>/ year</span>
+        </div>
+        <div class="description">
+            Advanced access for students who
+            want deeper guidance and feedback.
+        </div>
+        <ul class="features">
+            <li>Everything in All Access</li>
+            <li>Advanced projects</li>
+            <li>Exclusive resources</li>
+            <li>Community access</li>
+            <li>Future Pro content</li>
+        </ul>
+        <a href="login.html" class="button">
+            Coming Soon
+        </a>
+    </div>
+</div>
+<div class="note">
+    Prices are placeholders for now — we can change them later.
+</div>
+</section>
+<section class="faq">
+<h2>Questions.</h2>
+<div class="question">
+    <strong>Do I get lifetime access?</strong>
+    <p>Single-course purchases are designed for lifetime access.</p>
+</div>
+<div class="question">
+    <strong>Can I add more courses later?</strong>
+    <p>Yes. The platform is designed so new courses can be added over time.</p>
+</div>
+<div class="question">
+    <strong>Can I cancel a membership?</strong>
+    <p>Yes, once the real subscription system is connected.</p>
+</div>
+<div class="question">
+    <strong>Are these prices final?</strong>
+    <p>No. These are placeholders while we build the platform.</p>
+</div>
+</section>
+<footer>
+<span>© 2026 ACADEMY.</span>
+<span>Learn. Build. Scale.</span>
+</footer>
+</body>
+</html>

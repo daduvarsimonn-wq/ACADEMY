@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login — ACADEMY</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:#050505;
+    color:#fff;
+    font-family:Inter,Arial,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    width:500px;
+    height:500px;
+    background:radial-gradient(circle,rgba(255,255,255,.07),transparent 70%);
+    top:-200px;
+    left:-150px;
+    pointer-events:none;
+}
+
+.container{
+    width:100%;
+    max-width:440px;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo a{
+    color:white;
+    text-decoration:none;
+    font-size:28px;
+    font-weight:900;
+    letter-spacing:5px;
+}
+
+.logo span{
+    display:block;
+    margin-top:8px;
+    color:#777;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+}
+
+.card{
+    background:rgba(18,18,18,.88);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:24px;
+    padding:34px;
+    box-shadow:0 30px 80px rgba(0,0,0,.45);
+    backdrop-filter:blur(20px);
+}
+
+h1{
+    font-size:32px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#888;
+    font-size:14px;
+    line-height:1.6;
+    margin-bottom:28px;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    background:#0b0b0b;
+    padding:5px;
+    border-radius:12px;
+    margin-bottom:25px;
+}
+
+.tab{
+    flex:1;
+    border:0;
+    background:transparent;
+    color:#777;
+    padding:11px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.tab.active{
+    background:#fff;
+    color:#000;
+}
+
+.field{
+    margin-bottom:17px;
+}
+
+label{
+    display:block;
+    font-size:12px;
+    color:#999;
+    margin-bottom:8px;
+    letter-spacing:.5px;
+}
+
+input{
+    width:100%;
+    padding:14px 15px;
+    background:#090909;
+    color:white;
+    border:1px solid #292929;
+    border-radius:11px;
+    outline:none;
+    font-size:14px;
+    transition:.2s;
+}
+
+input:focus{
+    border-color:#777;
+    box-shadow:0 0 0 3px rgba(255,255,255,.04);
+}
+
+.submit{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:15px;
+    margin-top:8px;
+    background:white;
+    color:#000;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.submit:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 30px rgba(255,255,255,.12);
+}
+
+.submit:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+    transform:none;
+}
+
+.message{
+    display:none;
+    padding:12px 14px;
+    border-radius:10px;
+    margin-bottom:18px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.message.error{
+    display:block;
+    background:rgba(255,70,70,.08);
+    border:1px solid rgba(255,70,70,.2);
+    color:#ff8585;
+}
+
+.message.success{
+    display:block;
+    background:rgba(80,255,150,.07);
+    border:1px solid rgba(80,255,150,.18);
+    color:#80ffb0;
+}
+
+.back{
+    display:block;
+    text-align:center;
+    color:#666;
+    text-decoration:none;
+    font-size:12px;
+    margin-top:22px;
+}
+
+.back:hover{
+    color:white;
+}
+
+.small{
+    margin-top:18px;
+    color:#555;
+    text-align:center;
+    font-size:11px;
+    line-height:1.5;
+}
+
+@media(max-width:480px){
+    .card{
+        padding:25px 20px;
+    }
+
+    h1{
+        font-size:27px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <a href="index.html">ACADEMY</a>
+        <span>Learn. Build. Scale.</span>
+    </div>
+
+    <div class="card">
+
+        <h1 id="title">Welcome back.</h1>
+
+        <p class="subtitle" id="subtitle">
+            Sign in to continue your learning journey.
+        </p>
+
+        <div class="tabs">
+            <button class="tab active" id="loginTab" onclick="showLogin()">
+                LOGIN
+            </button>
+
+            <button class="tab" id="signupTab" onclick="showSignup()">
+                SIGN UP
+            </button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <form id="authForm">
+
+            <div class="field" id="nameField" style="display:none;">
+                <label for="name">FULL NAME</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Your name"
+                    autocomplete="name"
+                >
+            </div>
+
+            <div class="field">
+                <label for="email">EMAIL</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="password">PASSWORD</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="submit"
+                id="submitButton"
+            >
+                LOGIN →
+            </button>
+
+        </form>
+
+        <a href="index.html" class="back">
+            ← Back to ACADEMY
+        </a>
+
+        <div class="small">
+            Your account is secured by Supabase Authentication.
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+"https://jbhpkkwpdsyjbgizqtqf.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_odgH5ZbkfIhTPSfJO6ubcA_RAXUWYIA";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+let mode = "login";
+
+const form = document.getElementById("authForm");
+const message = document.getElementById("message");
+const submitButton = document.getElementById("submitButton");
+
+const title = document.getElementById("title");
+const subtitle = document.getElementById("subtitle");
+
+const nameField = document.getElementById("nameField");
+const nameInput = document.getElementById("name");
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+const loginTab = document.getElementById("loginTab");
+const signupTab = document.getElementById("signupTab");
+
+
+function showMessage(text,type){
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+}
+
+
+function clearMessage(){
+
+    message.textContent = "";
+
+    message.className = "message";
+}
+
+
+function showLogin(){
+
+    mode = "login";
+
+    title.textContent = "Welcome back.";
+
+    subtitle.textContent =
+        "Sign in to continue your learning journey.";
+
+    nameField.style.display = "none";
+
+    nameInput.required = false;
+
+    loginTab.classList.add("active");
+
+    signupTab.classList.remove("active");
+
+    submitButton.textContent = "LOGIN →";
+
+    clearMessage();
+}
+
+
+function showSignup(){
+
+    mode = "signup";
+
+    title.textContent = "Create your account.";
+
+    subtitle.textContent =
+        "Create your ACADEMY account and start learning.";
+
+    nameField.style.display = "block";
+
+    nameInput.required = true;
+
+    signupTab.classList.add("active");
+
+    loginTab.classList.remove("active");
+
+    submitButton.textContent = "CREATE ACCOUNT →";
+
+    clearMessage();
+}
+
+
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    clearMessage();
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+    const name =
+        nameInput.value.trim();
+
+
+    if(password.length < 6){
+
+        showMessage(
+            "Password must be at least 6 characters.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+        mode === "login"
+        ? "SIGNING IN..."
+        : "CREATING ACCOUNT...";
+
+
+    try{
+
+        if(mode === "signup"){
+
+            if(!name){
+
+                showMessage(
+                    "Please enter your full name.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const { data, error } =
+                await supabaseClient.auth.signUp({
+
+                    email: email,
+
+                    password: password,
+
+                    options: {
+
+                        data: {
+                            full_name: name
+                        }
+
+                    }
+
+                });
+
+
+            if(error){
+                throw error;
+            }
+
+
+            if(data.session){
+
+                localStorage.setItem(
+                    "academyStudentName",
+                    name
+                );
+
+                localStorage.setItem(
+                    "academyStudentEmail",
+                    email
+                );
+
+                showMessage(
+                    "Account created! Redirecting...",
+                    "success"
+                );
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }, 800);
+
+            }else{
+
+                showMessage(
+                    "Account created! Check your email to confirm your account, then log in.",
+                    "success"
+                );
+
+                showLogin();
+
+            }
+
+        }else{
+
+            const { data, error } =
+                await supabaseClient.auth.signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+            if(error){
+                throw error;
+            }
+
+
+            const user =
+                data.user;
+
+
+            localStorage.setItem(
+                "academyStudentEmail",
+                user.email || email
+            );
+
+
+            localStorage.setItem(
+                "academyStudentName",
+                user.user_metadata?.full_name || ""
+            );
+
+
+            showMessage(
+                "Login successful! Redirecting...",
+                "success"
+            );
+
+
+            setTimeout(() => {
+
+                window.location.href =
+                    "dashboard.html";
+
+            }, 700);
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        let text =
+            error.message ||
+            "Something went wrong. Please try again.";
+
+
+        if(text.includes("Invalid login credentials")){
+
+            text =
+                "Incorrect email or password.";
+
+        }
+
+        if(text.includes("User already registered")){
+
+            text =
+                "This email is already registered. Try logging in.";
+
+        }
+
+        if(text.includes("Password should be at least")){
+
+            text =
+                "Password must be at least 6 characters.";
+
+        }
+
+
+        showMessage(
+            text,
+            "error"
+        );
+
+    }finally{
+
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+            mode === "login"
+            ? "LOGIN →"
+            : "CREATE ACCOUNT →";
+
+    }
+
+});
+
+
+async function checkExistingSession(){
+
+    const { data } =
+        await supabaseClient.auth.getSession();
+
+
+    if(data.session){
+
+        window.location.href =
+            "dashboard.html";
+
+    }
+
+}
+
+
+checkExistingSession();
+
+</script>
+
+</body>
+</html>
